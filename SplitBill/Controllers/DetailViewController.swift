@@ -31,6 +31,8 @@ class DetailViewController: UIViewController
     @IBOutlet var contentViewHeight: NSLayoutConstraint!
     @IBOutlet var contentViewWidth: NSLayoutConstraint!
     @IBOutlet var scrollViewWidth: NSLayoutConstraint!
+    @IBOutlet var inviteMessageLabel: UILabel!
+    @IBOutlet var inviteView: UIView!
     
     let db = Firestore.firestore()
     var event: PaymentEvent?
@@ -57,7 +59,6 @@ class DetailViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        view.backgroundColor = .lightGray
         self.hideKeyboard()
         listOfParticipants.numberOfLines = 0
         button.setTitle("", for: .normal)
@@ -147,6 +148,7 @@ class DetailViewController: UIViewController
                                 doc.reference.updateData(["participants" : participants])
                             }
                             self.event = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
+                            print(self.event)
                             completion(true)
                         }
                     }
@@ -282,8 +284,10 @@ class DetailViewController: UIViewController
         }
         if isOwner == false
         {
+            self.inviteMessageLabel.isHidden = true
             self.inviteParticipantsButton.isHidden = true
-            self.view.backgroundColor = .white
+            self.inviteView.isHidden = true
+            
             self.priceTextField.isUserInteractionEnabled = false
             self.priceTextField.backgroundColor = .gray
             self.priceTextField.attributedPlaceholder = NSAttributedString(
@@ -310,8 +314,12 @@ class DetailViewController: UIViewController
         }
         else
         {
+            self.inviteMessageLabel.isHidden = false
+            self.inviteParticipantsButton.backgroundColor = .black
+            self.inviteParticipantsButton.layer.cornerRadius = 10
+            self.view.backgroundColor = .white
+            
             self.inviteParticipantsButton.isHidden = false
-            self.view.backgroundColor = .lightGray
             self.priceTextField.backgroundColor = .white
             self.priceTextField.attributedPlaceholder = NSAttributedString(
                 string: String(self.event?.price ?? 0.0),
@@ -424,7 +432,6 @@ class DetailViewController: UIViewController
         // Fall back to the base url if we can't generate a dynamic link.
         return linkBuilder?.link ?? baseURL
     }
-
 }
 extension UIViewController
 {

@@ -20,8 +20,7 @@ class CategoryViewController: SwipeTableViewController
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
     var didLoadAfterChange = false
-    //overscroll var
-    var lastY: CGFloat = 0.0
+
     
     override func viewDidLoad()
     {
@@ -31,7 +30,7 @@ class CategoryViewController: SwipeTableViewController
         tableView.delegate = self
         tableView.separatorStyle = .none
         self.navigationController?.navigationBar.topItem?.title = "ㄷㅍ"
-        self.tabBarController?.tabBar.items?[1].title = "홈"
+        self.tabBarController?.tabBar.items?[0].title = "홈"
 //        self.tabBarController?.tabBar.backgroundColor = UIColor.white
     //        view.backgroundColor = .lightGray
     }
@@ -150,7 +149,7 @@ class CategoryViewController: SwipeTableViewController
         {
             return
         }
-        db.collection("events").order(by: "dateCreated").addSnapshotListener
+        db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
         { querySnapShot, error in
             self.paymentArray = []
             if let e = error
@@ -172,12 +171,7 @@ class CategoryViewController: SwipeTableViewController
                             {
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                                 self.paymentArray.append(newEvent)
-                                
-                                DispatchQueue.main.async
-                                {
-                                    self.tableView.reloadData()
-                                }
-                                
+
                                 let manager = LocalNotificationManager()
                                 
                                 let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
@@ -250,10 +244,15 @@ class CategoryViewController: SwipeTableViewController
                                 }
                                 manager.schedule()
                                 self.didLoadAfterChange = true
+   
                             }
                         }
                     }
                 }
+            }
+            DispatchQueue.main.async
+            {
+                self.tableView.reloadData()
             }
         }
     }

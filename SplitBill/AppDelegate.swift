@@ -88,8 +88,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
                 let newEvent = PaymentEvent(FIRDocID: eventFIRDocID, eventName: "", dateCreated: 0.0, participants: [""], price: 0.0, eventDate: "", isOwner: false)
                 newDetailVC.event = newEvent
-                (self.window?.rootViewController as? UINavigationController)?.popToRootViewController(animated: true)
-                (self.window?.rootViewController as? UINavigationController)?.pushViewController(newDetailVC, animated: true)
+                print(newEvent)
+                
+                ((self.window?.rootViewController as? UITabBarController)?.selectedViewController as? UINavigationController)?.popToRootViewController(animated: true)
+                ((self.window?.rootViewController as? UITabBarController)?.selectedViewController as? UINavigationController)?.pushViewController(newDetailVC, animated: true)
             }
         }
     }
