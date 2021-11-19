@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="akV-Na-Uqk">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Trm-nj-RmS">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -100,7 +101,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="SplitBill" id="ca9-Qx-GMv">
-                        <barButtonItem key="leftBarButtonItem" title="SIgn Out" style="plain" id="acy-5S-U3F">
+                        <barButtonItem key="leftBarButtonItem" title="로그아웃" style="plain" id="acy-5S-U3F">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="signOutButtonPressed:" destination="EHi-C8-Uss" id="eiK-NS-dsz"/>
@@ -119,7 +120,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HHJ-Sd-g1d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1796" y="115"/>
+            <point key="canvasLocation" x="2933" y="1"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="q1h-g2-k7p">
@@ -130,7 +131,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhB-IT-Ixm">
-                                <rect key="frame" x="0.0" y="140" width="410" height="756"/>
+                                <rect key="frame" x="0.0" y="88" width="410" height="808"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZv-he-7pu" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="725"/>
@@ -391,16 +392,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iNf-1E-njy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2747.826086956522" y="114.50892857142857"/>
+            <point key="canvasLocation" x="3930" y="17"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="msJ-as-0HF">
             <objects>
                 <navigationController id="akV-Na-Uqk" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" selectedImage="house" catalog="system" id="C6n-zN-neL">
+                        <imageReference key="image" image="house" catalog="system" symbolScale="large"/>
+                    </tabBarItem>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="uiw-2g-wpc">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.17479766460000001" green="0.65953231459999995" blue="0.30471401720000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="ㄷㅍ"/>
+                        </userDefinedRuntimeAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="EHi-C8-Uss" kind="relationship" relationship="rootViewController" id="YoR-Ue-8WU"/>
@@ -408,10 +416,64 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NeF-7E-3iE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="941" y="115"/>
+            <point key="canvasLocation" x="2051" y="-17"/>
+        </scene>
+        <!--설정-->
+        <scene sceneID="BLu-cO-8Zs">
+            <objects>
+                <viewController id="Jtk-GN-wgO" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xNC-1V-27X">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings viewcontroller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6e-op-jyG">
+                                <rect key="frame" x="133" y="438" width="174" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="cth-09-HK6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="설정" image="gear" catalog="system" id="Aom-xS-tvM">
+                        <imageReference key="selectedImage" image="gear" catalog="system" symbolScale="medium"/>
+                    </tabBarItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WuN-G1-leS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2051" y="635"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="N8r-RJ-bg8">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Trm-nj-RmS" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="U4Q-FD-dRN">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="unselectedItemTintColor">
+                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </tabBar>
+                    <connections>
+                        <segue destination="akV-Na-Uqk" kind="relationship" relationship="viewControllers" id="Qae-xd-FOM"/>
+                        <segue destination="Jtk-GN-wgO" kind="relationship" relationship="viewControllers" id="foa-Ar-DRj"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eKC-PC-grI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="940.57971014492762" y="114.50892857142857"/>
         </scene>
     </scenes>
     <resources>
+        <image name="gear" catalog="system" width="128" height="119"/>
+        <image name="house" catalog="system" width="128" height="106"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

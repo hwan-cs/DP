@@ -20,6 +20,7 @@ class LoginViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
         setupProviderLoginView()
     }
     override func viewWillAppear(_ animated: Bool)

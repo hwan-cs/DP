@@ -20,14 +20,19 @@ class CategoryViewController: SwipeTableViewController
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
     var didLoadAfterChange = false
+    //overscroll var
+    var lastY: CGFloat = 0.0
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         tableView.rowHeight = 80
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.separatorStyle = .none
-        self.title = "ㄷㅍ"
+        self.navigationController?.navigationBar.topItem?.title = "ㄷㅍ"
+        self.tabBarController?.tabBar.items?[1].title = "홈"
+//        self.tabBarController?.tabBar.backgroundColor = UIColor.white
     //        view.backgroundColor = .lightGray
     }
     
@@ -166,7 +171,6 @@ class CategoryViewController: SwipeTableViewController
                                 , let FIRDocID = doc.documentID as? String
                             {
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
-                                print(newEvent)
                                 self.paymentArray.append(newEvent)
                                 
                                 DispatchQueue.main.async
@@ -244,7 +248,6 @@ class CategoryViewController: SwipeTableViewController
                                         manager.notifications = [SDMNotificationParticipants]
                                     }
                                 }
-                                print(manager.notifications)
                                 manager.schedule()
                                 self.didLoadAfterChange = true
                             }
@@ -320,4 +323,4 @@ class CategoryViewController: SwipeTableViewController
         paymentArray.remove(at: indexPath.row)
     }
 }
-    
+
