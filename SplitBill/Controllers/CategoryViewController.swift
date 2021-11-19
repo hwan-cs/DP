@@ -37,12 +37,11 @@ class CategoryViewController: SwipeTableViewController
         {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithDefaultBackground()
-            appearance.backgroundColor = .systemGreen
+            appearance.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
             appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
             appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
             navigationController?.navigationBar.standardAppearance = appearance
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            //navigationController?.navigationBar.compactAppearance = appearance
         }
         else
         {
@@ -66,9 +65,9 @@ class CategoryViewController: SwipeTableViewController
     {
         var textField = UITextField()
 
-        let alert = UIAlertController(title: "Add New Event", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "새로운 더치페이 이벤트", message: "", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add payment", style: .default) { (action) in
+        let action = UIAlertAction(title: "추가", style: .default) { (action) in
             //what will be happening once the user clicks the Add Item button on our UIAlert
             if  let event = textField.text, let userEmail = Auth.auth().currentUser?.email, let currentTime = Date().timeIntervalSince1970 as? Double
             {
@@ -89,11 +88,18 @@ class CategoryViewController: SwipeTableViewController
             self.tableView.reloadData()
         }
         alert.addTextField { (alertTextField) in
-            alertTextField.placeholder = "Create New Payment"
+            alertTextField.placeholder = "이벤트 이름을 입력하세요..."
             textField = alertTextField
         }
         alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: { (action: UIAlertAction!) in
+              print("Alert dismissed")
+        }))
         present(alert, animated: true, completion: nil)
+    }
+    @objc func dismissOnTapOutside()
+    {
+       self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
@@ -253,23 +259,26 @@ class CategoryViewController: SwipeTableViewController
     {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         var content = cell.defaultContentConfiguration()
-        
-        content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
-        content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
 
-        cell.backgroundColor = .systemGreen
-        cell.layer.borderColor = UIColor.white.cgColor
-        cell.layer.borderWidth = 5
-        cell.layer.cornerRadius = 24
-        
+        content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+        content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+        cell.backgroundColor = .clear
         cell.contentConfiguration = content
-        cell.clipsToBounds = true
-
+        
+        let cellView = UIView(frame: CGRect(x: 5, y: 5, width: tableView.bounds.width-10, height: 80))
+        cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
+        cellView.layer.cornerRadius = 25
+        cellView.layer.borderWidth = 5
+        cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
+        cellView.layer.masksToBounds = true
+        cell.contentView.addSubview(cellView)
+        cell.contentView.sendSubviewToBack(cellView)
+        
         return cell
     }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
-        return 80
+        return 90
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
