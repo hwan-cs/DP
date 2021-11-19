@@ -98,6 +98,7 @@ class CategoryViewController: SwipeTableViewController
     
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
+        self.didLoadAfterChange = false
         KeychainItem.deleteUserIdentifierFromKeychain()
         // Display the login controller again.
         DispatchQueue.main.async
@@ -159,7 +160,7 @@ class CategoryViewController: SwipeTableViewController
                                 , let FIRDocID = doc.documentID as? String
                             {
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
- 
+                                print(newEvent)
                                 self.paymentArray.append(newEvent)
                                 
                                 DispatchQueue.main.async
@@ -251,18 +252,18 @@ class CategoryViewController: SwipeTableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        var content = cell.defaultContentConfiguration()
         
-        cell.textLabel?.text = paymentArray[indexPath.section].eventName
-        cell.textLabel?.font = UIFont(name: "Apple Color Emoji", size: 20.0)
-        cell.detailTextLabel?.text = String(paymentArray[indexPath.section].price/Double(paymentArray[indexPath.section].participants.count))
-        cell.detailTextLabel?.font = UIFont(name: "System", size: 15.0)
-        cell.backgroundColor = UIColor.white
+        content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+        content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+
+        cell.backgroundColor = .systemGreen
+        cell.layer.borderColor = UIColor.white.cgColor
+        cell.layer.borderWidth = 5
+        cell.layer.cornerRadius = 24
         
-//        cell.layer.borderColor = UIColor.black.cgColor
-//        cell.layer.borderWidth = 1
-//        cell.layer.cornerRadius = 8
-//
-//        cell.clipsToBounds = true
+        cell.contentConfiguration = content
+        cell.clipsToBounds = true
 
         return cell
     }
@@ -270,33 +271,13 @@ class CategoryViewController: SwipeTableViewController
     {
         return 80
     }
-    override func numberOfSections(in tableView: UITableView) -> Int
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return paymentArray.count
     }
-    //spacing between cells
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
         return 1
-    }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        return 1
-    }
-    //make background color show through
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        let header = UIView(frame: .init(x: 0, y: 0, width: tableView.bounds.width-20, height: 80))
-        header.backgroundColor = .white
-        
-        let innerView = UIView(frame: .init(x: 10, y: 0, width: header.bounds.width, height: 80))
-        header.addSubview(innerView)
-    
-        innerView.backgroundColor = .clear
-        innerView.layer.cornerRadius = 12
-        innerView.layer.borderColor = UIColor.black.cgColor
-        innerView.layer.borderWidth = 2
-        return header
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
@@ -309,12 +290,11 @@ class CategoryViewController: SwipeTableViewController
         //current row that is selected
         if let indexPath = tableView.indexPathForSelectedRow
         {
-            destinationVC.event = paymentArray[indexPath.section]
+            destinationVC.event = paymentArray[indexPath.row]
         }
     }
     
     //MARK: - Delete Data from swipe
-    //MARK: -  11/19 버그발생, 못고치겠음, 머리카락빠지는중
     override func updateModel(at indexPath: IndexPath)
     {
         db.collection("events").document(paymentArray[indexPath.row].FIRDocID).delete()
@@ -329,7 +309,6 @@ class CategoryViewController: SwipeTableViewController
             }
         }
         paymentArray.remove(at: indexPath.row)
-        self.tableView.deleteSections(IndexSet(arrayLiteral: indexPath.section), with: .fade)
     }
 }
     

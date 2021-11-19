@@ -100,7 +100,7 @@ class DetailViewController: UIViewController
         
         dropDown.selectionAction = { [unowned self] (index: Int, item: String) in
             textField.placeholder = item
-            if item == "Other"
+            if item == "사용자 지정"
             {
                 dateTextField.backgroundColor = .white
                 dateTextField.attributedPlaceholder = NSAttributedString(
