@@ -292,6 +292,7 @@
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstItem="QA9-Qc-0w6" firstAttribute="leading" secondItem="RVf-Zx-7Xl" secondAttribute="leading" constant="8" id="6IL-lm-XsK"/>
+                                                    <constraint firstAttribute="height" constant="108" id="7xT-PT-fxL"/>
                                                     <constraint firstAttribute="trailing" secondItem="QA9-Qc-0w6" secondAttribute="trailing" constant="8" id="9jC-05-FHu"/>
                                                     <constraint firstItem="byU-Jy-qBI" firstAttribute="leading" secondItem="RVf-Zx-7Xl" secondAttribute="leading" constant="8" id="KV2-vn-2ja"/>
                                                     <constraint firstItem="byU-Jy-qBI" firstAttribute="top" secondItem="QA9-Qc-0w6" secondAttribute="bottom" constant="8" id="N3a-WV-nNc"/>
@@ -391,7 +392,8 @@
                         <outlet property="dropDownView" destination="cHD-ux-JK1" id="H0i-FI-S9M"/>
                         <outlet property="inviteMessageLabel" destination="QA9-Qc-0w6" id="HPB-Zg-tGj"/>
                         <outlet property="inviteParticipantsButton" destination="byU-Jy-qBI" id="7KG-m9-VJu"/>
-                        <outlet property="inviteView" destination="RVf-Zx-7Xl" id="FQV-8o-rcw"/>
+                        <outlet property="inviteView" destination="RVf-Zx-7Xl" id="x5z-pd-evN"/>
+                        <outlet property="inviteViewHeightConstraint" destination="7xT-PT-fxL" id="rCe-q6-7qt"/>
                         <outlet property="listOfParticipants" destination="CFh-eA-kOH" id="1jy-cj-TZv"/>
                         <outlet property="participantsLabel" destination="PTe-Zo-OAi" id="LUn-8v-bOW"/>
                         <outlet property="priceTextField" destination="zu3-Ft-kkY" id="NJI-0Z-bWi"/>

@@ -33,6 +33,7 @@ class DetailViewController: UIViewController
     @IBOutlet var scrollViewWidth: NSLayoutConstraint!
     @IBOutlet var inviteMessageLabel: UILabel!
     @IBOutlet var inviteView: UIView!
+    @IBOutlet var inviteViewHeightConstraint: NSLayoutConstraint!
     
     let db = Firestore.firestore()
     var event: PaymentEvent?
@@ -66,7 +67,8 @@ class DetailViewController: UIViewController
         contentViewHeight.constant = UIScreen.main.bounds.height-150
         contentViewWidth.constant = UIScreen.main.bounds.width
         scrollViewWidth.constant = UIScreen.main.bounds.width
-//        inviteParticipantsViewWidth.constant = UIScreen.main.bounds.width
+        
+        self.inviteViewHeightConstraint.isActive = true
         
         //options dropdown initialization
         dropDown.anchorView = dropDownView
@@ -75,8 +77,6 @@ class DetailViewController: UIViewController
         selectDateDropDown.anchorView = selectDateDropDownView
         selectDateDropDown.dataSource = selectDateDropDownItems
         
-//        textField.placeholder = "Select date of payment..."
-//        textField.isUserInteractionEnabled = false
         dateTextField.isUserInteractionEnabled = false
         dateTextField.backgroundColor = .gray
         dateTextField.attributedPlaceholder = NSAttributedString(
@@ -89,7 +89,6 @@ class DetailViewController: UIViewController
         dropDown.textColor = UIColor.black
         dropDown.selectedTextColor = UIColor.green
         dropDown.selectionBackgroundColor = UIColor.white
-//        dropDown.textFont = UIFont(name: "Apple Color Emoji", size: 14.0) ?? UIFont.systemFont(ofSize: 14)
         dropDown.cornerRadius = 15
         //customizing select date dropdown
         selectDateDropDown.bottomOffset = CGPoint(x: 0, y:(dropDown.anchorView?.plainView.bounds.height)!)
@@ -287,6 +286,7 @@ class DetailViewController: UIViewController
             self.inviteMessageLabel.isHidden = true
             self.inviteParticipantsButton.isHidden = true
             self.inviteView.isHidden = true
+            self.inviteViewHeightConstraint.constant = 0
             
             self.priceTextField.isUserInteractionEnabled = false
             self.priceTextField.backgroundColor = .gray
@@ -318,6 +318,7 @@ class DetailViewController: UIViewController
             self.inviteParticipantsButton.backgroundColor = .black
             self.inviteParticipantsButton.layer.cornerRadius = 10
             self.view.backgroundColor = .white
+            self.inviteViewHeightConstraint.constant = 108
             
             self.inviteParticipantsButton.isHidden = false
             self.priceTextField.backgroundColor = .white
