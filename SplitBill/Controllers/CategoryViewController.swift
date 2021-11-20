@@ -31,8 +31,6 @@ class CategoryViewController: SwipeTableViewController
         tableView.separatorStyle = .none
         self.navigationController?.navigationBar.topItem?.title = "ㄷㅍ"
         self.tabBarController?.tabBar.items?[0].title = "홈"
-//        self.tabBarController?.tabBar.backgroundColor = UIColor.white
-    //        view.backgroundColor = .lightGray
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -175,15 +173,15 @@ class CategoryViewController: SwipeTableViewController
                                 let manager = LocalNotificationManager()
                                 
                                 let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
-                                
+
                                 let EOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
-                                
+
                                 let SDMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
-                                
+
                                 let SOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
-                                
+
                                 let EOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
-                                
+
                                 let SDMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
                                 
                                 if owner == Auth.auth().currentUser?.email
@@ -209,7 +207,7 @@ class CategoryViewController: SwipeTableViewController
                                             manager.notifications = [EOMNotificationOwner]
                                         }
                                     }
-                                    else if eventDate != "EOM" && eventDate != "SOM"
+                                    else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
                                         manager.notifications = [SDMNotificationOwner]
                                     }
@@ -237,14 +235,14 @@ class CategoryViewController: SwipeTableViewController
                                             manager.notifications = [EOMNotificationParticipants]
                                         }
                                     }
-                                    else if eventDate != "EOM" && eventDate != "SOM"
+                                    else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
                                         manager.notifications = [SDMNotificationParticipants]
                                     }
                                 }
                                 manager.schedule()
+                                print(manager.notifications)
                                 self.didLoadAfterChange = true
-   
                             }
                         }
                     }
@@ -272,7 +270,13 @@ class CategoryViewController: SwipeTableViewController
         cellView.layer.cornerRadius = 25
         cellView.layer.borderWidth = 5
         cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
-        cellView.layer.masksToBounds = true
+        
+        cellView.layer.shadowColor = UIColor.black.cgColor
+        cellView.layer.shadowOpacity = 0.5
+        cellView.layer.shadowOffset = .zero
+        cellView.layer.shadowRadius = 8
+        
+        cellView.layer.masksToBounds = false
         cell.contentView.addSubview(cellView)
         cell.contentView.sendSubviewToBack(cellView)
         
