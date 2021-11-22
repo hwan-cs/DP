@@ -32,7 +32,6 @@ class CategoryViewController: SwipeTableViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
-        print("Viewwillappear")
         if #available(iOS 13.0, *)
         {
             let appearance = UINavigationBarAppearance()
