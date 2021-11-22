@@ -37,7 +37,6 @@ class DetailViewController: UIViewController
     
     let db = Firestore.firestore()
     var event: PaymentEvent?
-    var didChange: PaymentEvent?
     //MARK: - Dropdown 1
     let dropDown = DropDown()
     let dropDownItems = ["월초","월말","사용자 지정"]
@@ -180,7 +179,6 @@ class DetailViewController: UIViewController
                         }
                     }
                     self.listOfParticipants.text = tempList
-                    self.didChange = self.event
                     self.initView(self.event!.isOwner)
                 }
             }
@@ -206,7 +204,6 @@ class DetailViewController: UIViewController
                 }
             }
             self.listOfParticipants.text = tempList
-            self.didChange = self.event
             self.initView(self.event!.isOwner)
         }
         AppUtility.lockOrientation(.portrait)
@@ -214,31 +211,6 @@ class DetailViewController: UIViewController
     
     override func viewWillDisappear(_ animated: Bool)
     {
-        var price = self.event!.price
-        if self.priceTextField.text!.isDouble == true
-        {
-            price = Double(self.priceTextField.text!)!
-        }
-        if self.textField.placeholder! == "월초"
-        {
-            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: "SOM", isOwner: self.event!.isOwner)
-        }
-        else if self.textField.placeholder! == "월말"
-        {
-            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: "EOM", isOwner: self.event!.isOwner)
-        }
-        else if self.textField.placeholder! == "사용자 지정"
-        {
-            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: self.dateTextField.placeholder!, isOwner: self.event!.isOwner)
-        }
-        if self.didChange != self.event
-        {
-            print("hey")
-            print(self.didChange)
-            print(self.event)
-            Notification.didChange = true
-        }
-        
         db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
         { querySnapshot, err in
             if let err = err
