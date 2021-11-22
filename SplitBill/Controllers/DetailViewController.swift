@@ -37,6 +37,7 @@ class DetailViewController: UIViewController
     
     let db = Firestore.firestore()
     var event: PaymentEvent?
+    var didChange: PaymentEvent?
     //MARK: - Dropdown 1
     let dropDown = DropDown()
     let dropDownItems = ["월초","월말","사용자 지정"]
@@ -69,7 +70,6 @@ class DetailViewController: UIViewController
         scrollViewWidth.constant = UIScreen.main.bounds.width
         
         self.inviteViewHeightConstraint.isActive = true
-
         
         //options dropdown initialization
         dropDown.anchorView = dropDownView
@@ -149,6 +149,7 @@ class DetailViewController: UIViewController
                             }
                             self.event = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                             print(self.event)
+                            Notification.didChange = true
                             completion(true)
                         }
                     }
@@ -179,6 +180,7 @@ class DetailViewController: UIViewController
                         }
                     }
                     self.listOfParticipants.text = tempList
+                    self.didChange = self.event
                     self.initView(self.event!.isOwner)
                 }
             }
@@ -204,6 +206,7 @@ class DetailViewController: UIViewController
                 }
             }
             self.listOfParticipants.text = tempList
+            self.didChange = self.event
             self.initView(self.event!.isOwner)
         }
         AppUtility.lockOrientation(.portrait)
@@ -211,6 +214,31 @@ class DetailViewController: UIViewController
     
     override func viewWillDisappear(_ animated: Bool)
     {
+        var price = self.event!.price
+        if self.priceTextField.text!.isDouble == true
+        {
+            price = Double(self.priceTextField.text!)!
+        }
+        if self.textField.placeholder! == "월초"
+        {
+            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: "SOM", isOwner: self.event!.isOwner)
+        }
+        else if self.textField.placeholder! == "월말"
+        {
+            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: "EOM", isOwner: self.event!.isOwner)
+        }
+        else if self.textField.placeholder! == "사용자 지정"
+        {
+            self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: self.dateTextField.placeholder!, isOwner: self.event!.isOwner)
+        }
+        if self.didChange != self.event
+        {
+            print("hey")
+            print(self.didChange)
+            print(self.event)
+            Notification.didChange = true
+        }
+        
         db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
         { querySnapshot, err in
             if let err = err
@@ -227,7 +255,6 @@ class DetailViewController: UIViewController
                         {
                             if document.data()["price"] as? Double != Double(self.priceTextField.text!)
                             {
-                                self.didMakeChange = true
                                 document.reference.updateData(["price" : Double(self.priceTextField.text!)])
                             }
                         }
@@ -235,7 +262,6 @@ class DetailViewController: UIViewController
                         {
                             if document.data()["eventDate"] as? String != "SOM"
                             {
-                                self.didMakeChange = true
                                 document.reference.updateData(["eventDate" : "SOM"])
                             }
                         }
@@ -243,7 +269,6 @@ class DetailViewController: UIViewController
                         {
                             if document.data()["eventDate"] as? String != "EOM"
                             {
-                                self.didMakeChange = true
                                 document.reference.updateData(["eventDate" : "EOM"])
                             }
                         }
@@ -251,7 +276,6 @@ class DetailViewController: UIViewController
                         {
                             if document.data()["eventDate"] as? String != self.dateTextField.placeholder!
                             {
-                                self.didMakeChange = true
                                 document.reference.updateData(["eventDate" : self.dateTextField.placeholder!])
                             }
                         }
@@ -259,8 +283,6 @@ class DetailViewController: UIViewController
                 }
             }
         }
-        var CVC: CategoryViewController?
-        CVC?.didLoadAfterChange = false
         AppUtility.lockOrientation(.all)
     }
     
@@ -269,6 +291,7 @@ class DetailViewController: UIViewController
         var str: String?
         if self.event?.eventDate == "SOM"
         {
+            print("dsdsdsdsdsd")
             str = dropDownItems[0]
             dropDown.selectRow(at: 0)
         }

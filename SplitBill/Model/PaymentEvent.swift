@@ -1,7 +1,7 @@
 import Foundation
 import Firebase
 
-struct PaymentEvent
+struct PaymentEvent: Equatable
 {
     let FIRDocID: String
     let eventName: String

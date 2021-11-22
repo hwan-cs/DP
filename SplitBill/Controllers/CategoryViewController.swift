@@ -17,9 +17,7 @@ class CategoryViewController: SwipeTableViewController
     var paymentArray: [PaymentEvent] = []
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
-    var didLoadAfterChange = false
     var manager = LocalNotificationManager()
-
     
     override func viewDidLoad()
     {
@@ -34,6 +32,7 @@ class CategoryViewController: SwipeTableViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
+        print("Viewwillappear")
         if #available(iOS 13.0, *)
         {
             let appearance = UINavigationBarAppearance()
@@ -55,7 +54,14 @@ class CategoryViewController: SwipeTableViewController
             tableView.deselectRow(at: selectedRowNotNill, animated: true)
         }
         AppUtility.lockOrientation(.portrait)
-        loadEvents()
+        self.view.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
+        {
+            self.loadEvents
+            { success in
+                self.view.isUserInteractionEnabled = true
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool)
@@ -105,7 +111,7 @@ class CategoryViewController: SwipeTableViewController
     
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
-        self.didLoadAfterChange = false
+        Notification.didChange = true
         KeychainItem.deleteUserIdentifierFromKeychain()
         // Display the login controller again.
         DispatchQueue.main.async
@@ -123,7 +129,7 @@ class CategoryViewController: SwipeTableViewController
             self.showLoginViewController()
         }
     }
-    func loadEvents()
+    func loadEvents(completion: @escaping (_ success: Bool) -> Void)
     {
         //date formatter
         let dateFormatter = DateFormatter()
@@ -141,10 +147,9 @@ class CategoryViewController: SwipeTableViewController
         EOM.day = -1
         let endOfMonth = Calendar.current.date(byAdding: EOM, to: startOfMonth)
         print(dateFormatter.string(from: endOfMonth!))
-        
-        if didLoadAfterChange == true
+        if Notification.didChange == false
         {
-            print("didloadafterchagne == true")
+            completion(true)
             return
         }
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
@@ -240,7 +245,7 @@ class CategoryViewController: SwipeTableViewController
                                 }
                                 self.manager.schedule()
                                 print(self.manager.notifications)
-                                self.didLoadAfterChange = true
+                                Notification.didChange = false
                             }
                         }
                     }
@@ -249,6 +254,7 @@ class CategoryViewController: SwipeTableViewController
             DispatchQueue.main.async
             {
                 self.tableView.reloadData()
+                completion(true)
             }
         }
     }
@@ -256,13 +262,21 @@ class CategoryViewController: SwipeTableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        for subview in cell.contentView.subviews
+        {
+            if subview.layer.shadowOpacity == 0.5
+            {
+                subview.removeFromSuperview()
+            }
+        }
         var content = cell.defaultContentConfiguration()
-
+        
         content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
         content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
         cell.backgroundColor = .clear
         cell.contentConfiguration = content
-        
+
         let cellView = UIView(frame: CGRect(x: 5, y: 5, width: tableView.bounds.width-10, height: 80))
         cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
         cellView.layer.cornerRadius = 25
@@ -296,14 +310,16 @@ class CategoryViewController: SwipeTableViewController
     {
         performSegue(withIdentifier: "goToEvent", sender: self)
     }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        let destinationVC = segue.destination as! DetailViewController
-        //current row that is selected
-        if let indexPath = tableView.indexPathForSelectedRow
+        if segue.identifier == "goToEvent"
         {
-            destinationVC.event = paymentArray[indexPath.row]
+            let destinationVC = segue.destination as! DetailViewController
+            //current row that is selected
+            if let indexPath = tableView.indexPathForSelectedRow
+            {
+                destinationVC.event = paymentArray[indexPath.row]
+            }
         }
     }
     
