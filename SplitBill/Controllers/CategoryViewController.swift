@@ -1,10 +1,8 @@
 //
 //  CategoryViewController.swift
-//  Todoey
+//  DP
 //
-//  Created by Jung Hwan Park on 2021/08/01.
-//  Copyright © 2021 App Brewery. All rights reserved.
-//
+//  Created by Jung Hwan Park on 2021/11/04.
 
 import UIKit
 import AuthenticationServices
@@ -20,6 +18,7 @@ class CategoryViewController: SwipeTableViewController
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
     var didLoadAfterChange = false
+    var manager = LocalNotificationManager()
 
     
     override func viewDidLoad()
@@ -145,6 +144,7 @@ class CategoryViewController: SwipeTableViewController
         
         if didLoadAfterChange == true
         {
+            print("didloadafterchagne == true")
             return
         }
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
@@ -169,8 +169,6 @@ class CategoryViewController: SwipeTableViewController
                             {
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                                 self.paymentArray.append(newEvent)
-
-                                let manager = LocalNotificationManager()
                                 
                                 let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
 
@@ -188,60 +186,60 @@ class CategoryViewController: SwipeTableViewController
                                 {
                                     if eventDate == "SOM"
                                     {
-                                        manager.notifications = [SOMNotificationOwner]
+                                        self.manager.notifications = [SOMNotificationOwner]
                                     }
                                     else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
                                     {
                                         if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
                                         {
-                                            manager.notifications = [EOMNotificationOwner]
+                                            self.manager.notifications = [EOMNotificationOwner]
                                         }
                                         else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
                                         {
                                             var foo = EOMNotificationOwner
                                             foo.datetime.day =  foo.datetime.day!-1
-                                            manager.notifications = [foo]
+                                            self.manager.notifications = [foo]
                                         }
                                         else
                                         {
-                                            manager.notifications = [EOMNotificationOwner]
+                                            self.manager.notifications = [EOMNotificationOwner]
                                         }
                                     }
                                     else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
-                                        manager.notifications = [SDMNotificationOwner]
+                                        self.manager.notifications = [SDMNotificationOwner]
                                     }
                                 }
                                 else
                                 {
                                     if eventDate == "SOM"
                                     {
-                                        manager.notifications = [SOMNotificationParticipants]
+                                        self.manager.notifications = [SOMNotificationParticipants]
                                     }
                                     else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
                                     {
                                         if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
                                         {
-                                            manager.notifications = [EOMNotificationParticipants]
+                                            self.manager.notifications = [EOMNotificationParticipants]
                                         }
                                         else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
                                         {
                                             var foo = EOMNotificationParticipants
                                             foo.datetime.day = foo.datetime.day!-1
-                                            manager.notifications = [foo]
+                                            self.manager.notifications = [foo]
                                         }
                                         else
                                         {
-                                            manager.notifications = [EOMNotificationParticipants]
+                                            self.manager.notifications = [EOMNotificationParticipants]
                                         }
                                     }
                                     else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
-                                        manager.notifications = [SDMNotificationParticipants]
+                                        self.manager.notifications = [SDMNotificationParticipants]
                                     }
                                 }
-                                manager.schedule()
-                                print(manager.notifications)
+                                self.manager.schedule()
+                                print(self.manager.notifications)
                                 self.didLoadAfterChange = true
                             }
                         }

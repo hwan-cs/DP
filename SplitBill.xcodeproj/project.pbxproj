@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		02954895C96CC388837C521B /* Pods_SplitBill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FF0A214A2C7B691841DCC6 /* Pods_SplitBill.framework */; };
+		1A0A9145274B8115001F24C0 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0A9144274B8114001F24C0 /* SettingsViewController.swift */; };
 		1A703040272D6E2D00615000 /* PaymentEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A70303F272D6E2C00615000 /* PaymentEvent.swift */; };
 		1A83E98C26F73E5E006F2C4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A83E98B26F73E5E006F2C4E /* AppDelegate.swift */; };
 		1A83E99026F73E5E006F2C4E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A83E98F26F73E5E006F2C4E /* LoginViewController.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A0A9144274B8114001F24C0 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1A70303F272D6E2C00615000 /* PaymentEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentEvent.swift; sourceTree = "<group>"; };
 		1A83E98826F73E5E006F2C4E /* SplitBill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SplitBill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A83E98B26F73E5E006F2C4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				1A9AEF632709A84C00DA0F35 /* SwipeTableViewController.swift */,
 				1A83E98F26F73E5E006F2C4E /* LoginViewController.swift */,
 				1A8B54F72732DBCA00B6A212 /* DetailViewController.swift */,
+				1A0A9144274B8114001F24C0 /* SettingsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				1A703040272D6E2D00615000 /* PaymentEvent.swift in Sources */,
 				1A9AEF622709A7D300DA0F35 /* CategoryViewController.swift in Sources */,
 				1AE13F1D2744D36900633B7C /* AppUtility.swift in Sources */,
+				1A0A9145274B8115001F24C0 /* SettingsViewController.swift in Sources */,
 				1A83E9A326F74CF2006F2C4E /* KeychainItem.swift in Sources */,
 				1A83E99026F73E5E006F2C4E /* LoginViewController.swift in Sources */,
 				1A9AEF642709A84C00DA0F35 /* SwipeTableViewController.swift in Sources */,

@@ -69,6 +69,7 @@ class DetailViewController: UIViewController
         scrollViewWidth.constant = UIScreen.main.bounds.width
         
         self.inviteViewHeightConstraint.isActive = true
+
         
         //options dropdown initialization
         dropDown.anchorView = dropDownView
@@ -187,11 +188,15 @@ class DetailViewController: UIViewController
             self.title = self.event!.eventName
             var tempList = ""
             let participantsArray = self.event!.participants
-            for people in participantsArray
+            for (index, people) in participantsArray.enumerated()
             {
-                if participantsArray.count == 1
+                if index == 0
                 {
                     tempList.append("\(people)")
+                }
+                else if index == participantsArray.count-1
+                {
+                    tempList.append("\(people)\n")
                 }
                 else
                 {
@@ -244,7 +249,7 @@ class DetailViewController: UIViewController
                         }
                         else if self.textField.placeholder! == "사용자 지정"
                         {
-                            if document.data()["eventDate"] as? String != "self.dateTextField.placeholder!"
+                            if document.data()["eventDate"] as? String != self.dateTextField.placeholder!
                             {
                                 self.didMakeChange = true
                                 document.reference.updateData(["eventDate" : self.dateTextField.placeholder!])
@@ -287,7 +292,7 @@ class DetailViewController: UIViewController
             self.inviteParticipantsButton.isHidden = true
             self.inviteView.isHidden = true
             self.inviteViewHeightConstraint.constant = 0
-            
+
             self.priceTextField.isUserInteractionEnabled = false
             self.priceTextField.backgroundColor = .gray
             self.priceTextField.attributedPlaceholder = NSAttributedString(
@@ -318,7 +323,7 @@ class DetailViewController: UIViewController
             self.inviteParticipantsButton.backgroundColor = .black
             self.inviteParticipantsButton.layer.cornerRadius = 10
             self.view.backgroundColor = .white
-            self.inviteViewHeightConstraint.constant = 108
+            self.inviteViewHeightConstraint.constant = 88
             
             self.inviteParticipantsButton.isHidden = false
             self.priceTextField.backgroundColor = .white
