@@ -163,17 +163,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
         guard let viewController = self.presentingViewController as? CategoryViewController
             else { return }
         
-        DispatchQueue.main.async {
-//            viewController.userIdentifierLabel.text = userIdentifier
-//            if let givenName = fullName?.givenName {
-//                viewController.givenNameLabel.text = givenName
-//            }
-//            if let familyName = fullName?.familyName {
-//                viewController.familyNameLabel.text = familyName
-//            }
-//            if let email = email {
-//                viewController.emailLabel.text = email
-//            }
+        DispatchQueue.main.async
+        {
             self.dismiss(animated: true, completion: nil)
         }
     }

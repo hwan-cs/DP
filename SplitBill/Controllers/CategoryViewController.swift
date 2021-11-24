@@ -325,15 +325,32 @@ class CategoryViewController: SwipeTableViewController
     //MARK: - Delete Data from swipe
     override func updateModel(at indexPath: IndexPath)
     {
-        db.collection("events").document(paymentArray[indexPath.row].FIRDocID).delete()
-        {   err in
-            if let err = err
-            {
-                print("Error removing document: \(err)")
+        if paymentArray[indexPath.row].isOwner == true
+        {
+            db.collection("events").document(paymentArray[indexPath.row].FIRDocID).delete()
+            {   err in
+                if let err = err
+                {
+                    print("Error removing document as owner: \(err)")
+                }
+                else
+                {
+                    print("Document successfully removed!")
+                }
             }
-            else
-            {
-                print("Document successfully removed!")
+        }
+        else if paymentArray[indexPath.row].isOwner == false
+        {
+            db.collection("events").document(paymentArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser?.email!])])
+            { err in
+                if let err = err
+                {
+                    print("Error removing document as participant: \(err)")
+                }
+                else
+                {
+                    print("Document successfully removed!")
+                }
             }
         }
         paymentArray.remove(at: indexPath.row)

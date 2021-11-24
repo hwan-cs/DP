@@ -168,15 +168,15 @@ class DetailViewController: UIViewController
                     self.title = self.event!.eventName
                     var tempList = ""
                     let participantsArray = self.event!.participants
-                    for people in participantsArray
+                    for (index, people) in participantsArray.enumerated()
                     {
-                        if participantsArray.count == 1
+                        if index == 0
                         {
                             tempList.append("\(people)")
                         }
                         else
                         {
-                            tempList.append("\(people)\n")
+                            tempList.append("\n\(people)")
                         }
                     }
                     self.listOfParticipants.text = tempList
@@ -196,13 +196,9 @@ class DetailViewController: UIViewController
                 {
                     tempList.append("\(people)")
                 }
-                else if index == participantsArray.count-1
-                {
-                    tempList.append("\(people)\n")
-                }
                 else
                 {
-                    tempList.append("\(people)\n")
+                    tempList.append("\n\(people)")
                 }
             }
             self.listOfParticipants.text = tempList
