@@ -20,7 +20,7 @@ class SettingsViewController: UIViewController
         view.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
         titleLabel.numberOfLines = 0
         titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
-        let NVshadowView = UIView(frame: CGRect(x: 0, y: 0, width: pushNotificationsView.bounds.width+10, height: pushNotificationsView.bounds.height))
+        let NVshadowView = UIView(frame: CGRect(x: -5, y: 0, width: pushNotificationsView.bounds.width+10, height: pushNotificationsView.bounds.height))
         NVshadowView.backgroundColor = .white
         NVshadowView.layer.cornerRadius = 25
         NVshadowView.layer.borderWidth = 1
@@ -29,7 +29,7 @@ class SettingsViewController: UIViewController
         NVshadowView.layer.shadowOpacity = 0.1
         NVshadowView.layer.shadowOffset = .zero
         NVshadowView.layer.shadowRadius = 5
-        let DMshadowView = UIView(frame: CGRect(x: 0, y: 0, width: darkModeView.bounds.width+10, height: darkModeView.bounds.height))
+        let DMshadowView = UIView(frame: CGRect(x: -5, y: 0, width: darkModeView.bounds.width+10, height: darkModeView.bounds.height))
         DMshadowView.backgroundColor = .white
         DMshadowView.layer.cornerRadius = 25
         DMshadowView.layer.borderWidth = 1

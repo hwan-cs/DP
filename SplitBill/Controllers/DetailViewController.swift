@@ -47,6 +47,9 @@ class DetailViewController: UIViewController
     let selectDateDropDown = DropDown()
     let selectDateDropDownItems = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
     
+    var saveButtonView = UIView()
+    var saveButton = UIButton()
+    
     lazy private var shareController: UIActivityViewController =
     {
       let activities: [Any] = [
@@ -124,6 +127,7 @@ class DetailViewController: UIViewController
             dateTextField.placeholder = item
         }
     }
+    
     func loadFromInvitation(completion: @escaping (_ success: Bool) -> Void)
     {
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments { querySnapshot, err in
@@ -156,6 +160,82 @@ class DetailViewController: UIViewController
                 }
             }
         }
+    }
+    
+    @objc func saveButtonPressed(_ sender: UIButton)
+    {
+        let alert = UIAlertController(title: "저장하시겠습니까?", message: "한번 저장하면 다시 날짜를 바꿀 수 없습니다.", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "예", style: .default)
+        { (action) in
+            self.db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
+            { querySnapshot, err in
+                if let err = err
+                {
+                    print("error getting documents! \(err)")
+                }
+                else
+                {
+                    for document in querySnapshot!.documents
+                    {
+                        if document.documentID == self.event?.FIRDocID
+                        {
+                            if self.priceTextField.text!.isDouble == true
+                            {
+                                if document.data()["price"] as? Double != Double(self.priceTextField.text!)
+                                {
+                                    document.reference.updateData(["price" : Double(self.priceTextField.text!)])
+                                }
+                            }
+                            if self.textField.placeholder! == "월초"
+                            {
+                                if document.data()["eventDate"] as? String != "SOM"
+                                {
+                                    document.reference.updateData(["eventDate" : "SOM"])
+                                }
+                            }
+                            else if self.textField.placeholder! == "월말"
+                            {
+                                if document.data()["eventDate"] as? String != "EOM"
+                                {
+                                    document.reference.updateData(["eventDate" : "EOM"])
+                                }
+                            }
+                            else if self.textField.placeholder! == "사용자 지정"
+                            {
+                                if document.data()["eventDate"] as? String != self.dateTextField.placeholder!
+                                {
+                                    document.reference.updateData(["eventDate" : self.dateTextField.placeholder!])
+                                }
+                            }
+                        }
+                    }
+                    if self.textField.placeholder! != "날짜를 설정하세요"
+                    {
+                        self.dropDownView.isUserInteractionEnabled = false
+                        self.textField.backgroundColor = .gray
+                        self.textField.attributedPlaceholder = NSAttributedString(
+                            string: self.textField.placeholder!,
+                            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+                        )
+                        self.selectDateDropDownView.isUserInteractionEnabled = false
+                        self.dateTextField.backgroundColor = .gray
+                        self.dateTextField.attributedPlaceholder = NSAttributedString(
+                            string: self.dateTextField.placeholder!,
+                            attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+                        )
+       
+                        self.saveButtonView.removeFromSuperview()
+                        self.saveButton.removeFromSuperview()
+                    }
+                }
+            }
+        }
+        alert.addAction(action)
+        alert.addAction(UIAlertAction(title: "아니오", style: .cancel, handler: { (action: UIAlertAction!) in
+              print("Alert dismissed")
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -228,9 +308,6 @@ class DetailViewController: UIViewController
         }
         if self.didChange != self.event
         {
-            print("hey")
-            print(self.didChange)
-            print(self.event)
             Notification.didChange = true
         }
         db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
@@ -252,40 +329,39 @@ class DetailViewController: UIViewController
                                 document.reference.updateData(["price" : Double(self.priceTextField.text!)])
                             }
                         }
-                        if self.textField.placeholder! == "월초"
-                        {
-                            if document.data()["eventDate"] as? String != "SOM"
-                            {
-                                document.reference.updateData(["eventDate" : "SOM"])
-                            }
-                        }
-                        else if self.textField.placeholder! == "월말"
-                        {
-                            if document.data()["eventDate"] as? String != "EOM"
-                            {
-                                document.reference.updateData(["eventDate" : "EOM"])
-                            }
-                        }
-                        else if self.textField.placeholder! == "사용자 지정"
-                        {
-                            if document.data()["eventDate"] as? String != self.dateTextField.placeholder!
-                            {
-                                document.reference.updateData(["eventDate" : self.dateTextField.placeholder!])
-                            }
-                        }
                     }
                 }
             }
         }
+        self.saveButtonView.removeFromSuperview()
+        self.saveButton.removeFromSuperview()
         AppUtility.lockOrientation(.all)
     }
-    
+    override func viewDidDisappear(_ animated: Bool)
+    {
+        self.saveButtonView.removeFromSuperview()
+        self.saveButton.removeFromSuperview()
+    }
     func initView(_ isOwner: Bool)
     {
+        if event?.eventName != "" && event?.eventDate == "" && event?.isOwner == true
+        {
+            saveButtonView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
+            saveButtonView.backgroundColor = .lightGray
+            saveButton.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-10, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
+            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ]), for: .normal)
+            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.blue ]), for: .selected)
+            saveButton.addTarget(self, action: #selector(saveButtonPressed(_:)), for: .touchUpInside)
+            
+            self.tabBarController?.view.addSubview(saveButtonView)
+            self.tabBarController?.view.bringSubviewToFront(saveButtonView)
+            self.tabBarController?.view.addSubview(saveButton)
+            self.tabBarController?.view.bringSubviewToFront(saveButton)
+        }
+        
         var str: String?
         if self.event?.eventDate == "SOM"
         {
-            print("dsdsdsdsdsd")
             str = dropDownItems[0]
             dropDown.selectRow(at: 0)
         }
@@ -334,6 +410,38 @@ class DetailViewController: UIViewController
                 selectDateDropDownView.isUserInteractionEnabled = false
             }
         }
+        else if isOwner == true && self.event?.eventDate != ""
+        {
+            self.inviteMessageLabel.isHidden = false
+            self.inviteParticipantsButton.backgroundColor = .black
+            self.inviteParticipantsButton.layer.cornerRadius = 10
+            self.view.backgroundColor = .white
+            self.inviteViewHeightConstraint.constant = 88
+            
+            self.inviteParticipantsButton.isHidden = false
+            self.priceTextField.backgroundColor = .white
+            self.priceTextField.attributedPlaceholder = NSAttributedString(
+                string: String(self.event?.price ?? 0.0),
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.black]
+            )
+            self.dropDownView.isUserInteractionEnabled = false
+            self.textField.backgroundColor = .gray
+            self.textField.attributedPlaceholder = NSAttributedString(
+                string: str!,
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+            )
+            if str! == dropDownItems[2]
+            {
+                dateTextField.backgroundColor = .gray
+                dateTextField.attributedPlaceholder = NSAttributedString(
+                    string: self.event?.eventDate ?? "",
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]
+                )
+                isOther = true
+                selectDateDropDown.selectRow(at: Int(self.event!.eventDate)!-1)
+                selectDateDropDownView.isUserInteractionEnabled = false
+            }
+        }
         else
         {
             self.inviteMessageLabel.isHidden = false
@@ -343,6 +451,7 @@ class DetailViewController: UIViewController
             self.inviteViewHeightConstraint.constant = 88
             
             self.inviteParticipantsButton.isHidden = false
+            
             self.priceTextField.backgroundColor = .white
             self.priceTextField.attributedPlaceholder = NSAttributedString(
                 string: String(self.event?.price ?? 0.0),
