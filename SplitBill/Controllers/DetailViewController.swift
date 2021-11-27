@@ -358,7 +358,7 @@ class DetailViewController: UIViewController
         if event?.eventName != "" && event?.eventDate == "" && event?.isOwner == true
         {
             saveButtonView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
-            saveButtonView.backgroundColor = .lightGray
+            saveButtonView.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
             saveButton.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-10, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
             saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ]), for: .normal)
             saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.blue ]), for: .selected)
@@ -505,6 +505,10 @@ class DetailViewController: UIViewController
                 isOther = true
                 selectDateDropDown.selectRow(at: Int(self.event!.eventDate)!-1)
             }
+        }
+        if #available(iOS 13.0, *)
+        {
+            self.priceTextField.overrideUserInterfaceStyle = .light
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)

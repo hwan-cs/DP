@@ -28,16 +28,17 @@ class SettingsViewController: UIViewController
     }
     func initView(_ isDarkOn: Bool)
     {
+        titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
         for subview in pushNotificationsView.subviews
         {
-            if subview.layer.shadowOpacity == 0.1
+            if subview.layer.shadowOpacity == 0.2
             {
                 subview.removeFromSuperview()
             }
         }
         for subview in darkModeView.subviews
         {
-            if subview.layer.shadowOpacity == 0.1
+            if subview.layer.shadowOpacity == 0.2
             {
                 subview.removeFromSuperview()
             }
@@ -62,7 +63,6 @@ class SettingsViewController: UIViewController
             DMshadowView.layer.borderColor = UIColor.black.cgColor
             NVshadowView.layer.shadowColor = UIColor.white.cgColor
             DMshadowView.layer.shadowColor = UIColor.white.cgColor
-            titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.black])
         }
         else
         {
@@ -73,17 +73,16 @@ class SettingsViewController: UIViewController
             DMshadowView.layer.borderColor = UIColor.lightGray.cgColor
             NVshadowView.layer.shadowColor = UIColor.black.cgColor
             DMshadowView.layer.shadowColor = UIColor.black.cgColor
-            titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
         }
         NVshadowView.layer.cornerRadius = 25
         NVshadowView.layer.borderWidth = 1
-        NVshadowView.layer.shadowOpacity = 0.1
+        NVshadowView.layer.shadowOpacity = 0.2
         NVshadowView.layer.shadowOffset = .zero
         NVshadowView.layer.shadowRadius = 5
 
         DMshadowView.layer.cornerRadius = 25
         DMshadowView.layer.borderWidth = 1
-        DMshadowView.layer.shadowOpacity = 0.1
+        DMshadowView.layer.shadowOpacity = 0.2
         DMshadowView.layer.shadowOffset = .zero
         DMshadowView.layer.shadowRadius = 5
         pushNotificationsView.addSubview(NVshadowView)
