@@ -17,7 +17,6 @@ class CategoryViewController: SwipeTableViewController
     var paymentArray: [PaymentEvent] = []
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
-    var manager = LocalNotificationManager()
     
     override func viewDidLoad()
     {
@@ -32,19 +31,35 @@ class CategoryViewController: SwipeTableViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         if #available(iOS 13.0, *)
         {
+            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
             let appearance = UINavigationBarAppearance()
             appearance.configureWithDefaultBackground()
             appearance.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
-            appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
-            appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
+            if isDarkOn == true
+            {
+                appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.black]
+                appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.black]
+                self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
+                self.navigationItem.rightBarButtonItem?.tintColor = UIColor.black
+            }
+            else
+            {
+                appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
+                appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
+                self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
+                self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
+                self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+            }
             navigationController?.navigationBar.standardAppearance = appearance
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
         }
         else
         {
            // Fallback on earlier versions
+           view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
            navigationController?.navigationBar.barTintColor = .systemGreen
         }
         let selectedRow: IndexPath? = tableView.indexPathForSelectedRow
@@ -110,7 +125,7 @@ class CategoryViewController: SwipeTableViewController
     
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
-        Notification.didChange = true
+        PaymentEvent.didChange = true
         KeychainItem.deleteUserIdentifierFromKeychain()
         // Display the login controller again.
         DispatchQueue.main.async
@@ -146,7 +161,12 @@ class CategoryViewController: SwipeTableViewController
         EOM.day = -1
         let endOfMonth = Calendar.current.date(byAdding: EOM, to: startOfMonth)
         print(dateFormatter.string(from: endOfMonth!))
-        if Notification.didChange == false
+        if PaymentEvent.didChange == false && Notification.pushNotificationOn == true
+        {
+            completion(true)
+            return
+        }
+        if Notification.pushNotificationOn == false
         {
             completion(true)
             return
@@ -174,6 +194,11 @@ class CategoryViewController: SwipeTableViewController
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                                 self.paymentArray.append(newEvent)
                                 
+                                if Notification.pushNotificationOn == false
+                                {
+                                    PaymentEvent.didChange = false
+                                    break
+                                }
                                 let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
 
                                 let EOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
@@ -190,61 +215,61 @@ class CategoryViewController: SwipeTableViewController
                                 {
                                     if eventDate == "SOM"
                                     {
-                                        self.manager.notifications = [SOMNotificationOwner]
+                                        Notification.manager.notifications = [SOMNotificationOwner]
                                     }
                                     else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
                                     {
                                         if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
                                         {
-                                            self.manager.notifications = [EOMNotificationOwner]
+                                            Notification.manager.notifications = [EOMNotificationOwner]
                                         }
                                         else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
                                         {
                                             var foo = EOMNotificationOwner
                                             foo.datetime.day =  foo.datetime.day!-1
-                                            self.manager.notifications = [foo]
+                                            Notification.manager.notifications = [foo]
                                         }
                                         else
                                         {
-                                            self.manager.notifications = [EOMNotificationOwner]
+                                            Notification.manager.notifications = [EOMNotificationOwner]
                                         }
                                     }
                                     else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
-                                        self.manager.notifications = [SDMNotificationOwner]
+                                        Notification.manager.notifications = [SDMNotificationOwner]
                                     }
                                 }
                                 else
                                 {
                                     if eventDate == "SOM"
                                     {
-                                        self.manager.notifications = [SOMNotificationParticipants]
+                                        Notification.manager.notifications = [SOMNotificationParticipants]
                                     }
                                     else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
                                     {
                                         if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
                                         {
-                                            self.manager.notifications = [EOMNotificationParticipants]
+                                            Notification.manager.notifications = [EOMNotificationParticipants]
                                         }
                                         else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
                                         {
                                             var foo = EOMNotificationParticipants
                                             foo.datetime.day = foo.datetime.day!-1
-                                            self.manager.notifications = [foo]
+                                            Notification.manager.notifications = [foo]
                                         }
                                         else
                                         {
-                                            self.manager.notifications = [EOMNotificationParticipants]
+                                            Notification.manager.notifications = [EOMNotificationParticipants]
                                         }
                                     }
                                     else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                     {
-                                        self.manager.notifications = [SDMNotificationParticipants]
+                                        Notification.manager.notifications = [SDMNotificationParticipants]
                                     }
                                 }
-                                self.manager.schedule()
-                                print(self.manager.notifications)
-                                Notification.didChange = false
+                                Notification.manager.schedule()
+                                print(Notification.manager.notifications)
+                                PaymentEvent.didChange = false
                             }
                         }
                     }
@@ -282,7 +307,15 @@ class CategoryViewController: SwipeTableViewController
         cellView.layer.borderWidth = 5
         cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
         
-        cellView.layer.shadowColor = UIColor.black.cgColor
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        if isDarkOn == true
+        {
+            cellView.layer.shadowColor = UIColor.white.cgColor
+        }
+        else
+        {
+            cellView.layer.shadowColor = UIColor.black.cgColor
+        }
         cellView.layer.shadowOpacity = 0.5
         cellView.layer.shadowOffset = .zero
         cellView.layer.shadowRadius = 8

@@ -14,7 +14,8 @@ struct Notification
     var title: String
     var body: String
     var datetime: DateComponents
-    static var didChange: Bool = true
+    static var manager = LocalNotificationManager()
+    static var pushNotificationOn: Bool = true
 }
 
 class LocalNotificationManager

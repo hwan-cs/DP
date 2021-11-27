@@ -65,6 +65,17 @@ class DetailViewController: UIViewController
     {
         super.viewDidLoad()
         self.hideKeyboard()
+        
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        if #available(iOS 13.0, *)
+        {
+            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
+        }
+        else
+        {
+            view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
+        }
+        
         listOfParticipants.numberOfLines = 0
         button.setTitle("", for: .normal)
         selectDateButton.setTitle("", for: .normal)
@@ -153,7 +164,7 @@ class DetailViewController: UIViewController
                             }
                             self.event = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                             print(self.event)
-                            Notification.didChange = true
+                            PaymentEvent.didChange = true
                             completion(true)
                         }
                     }
@@ -308,7 +319,7 @@ class DetailViewController: UIViewController
         }
         if self.didChange != self.event
         {
-            Notification.didChange = true
+            PaymentEvent.didChange = true
         }
         db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
         { querySnapshot, err in
@@ -358,7 +369,7 @@ class DetailViewController: UIViewController
             self.tabBarController?.view.addSubview(saveButton)
             self.tabBarController?.view.bringSubviewToFront(saveButton)
         }
-        
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         var str: String?
         if self.event?.eventDate == "SOM"
         {
@@ -413,9 +424,20 @@ class DetailViewController: UIViewController
         else if isOwner == true && self.event?.eventDate != ""
         {
             self.inviteMessageLabel.isHidden = false
-            self.inviteParticipantsButton.backgroundColor = .black
+            if isDarkOn == true
+            {
+                self.inviteParticipantsButton.backgroundColor = .white
+                self.inviteParticipantsButton.setTitleColor(.black, for: .normal)
+                self.inviteMessageLabel.textColor = UIColor.white
+            }
+            else
+            {
+                self.inviteParticipantsButton.backgroundColor = .black
+                self.inviteParticipantsButton.setTitleColor(.white, for: .normal)
+                self.inviteMessageLabel.textColor = UIColor.black
+            }
+            self.inviteParticipantsButton.setTitleColor(.blue, for: .selected)
             self.inviteParticipantsButton.layer.cornerRadius = 10
-            self.view.backgroundColor = .white
             self.inviteViewHeightConstraint.constant = 88
             
             self.inviteParticipantsButton.isHidden = false
@@ -445,9 +467,20 @@ class DetailViewController: UIViewController
         else
         {
             self.inviteMessageLabel.isHidden = false
-            self.inviteParticipantsButton.backgroundColor = .black
+            if isDarkOn == true
+            {
+                self.inviteParticipantsButton.backgroundColor = .white
+                self.inviteParticipantsButton.setTitleColor(.black, for: .normal)
+                self.inviteMessageLabel.textColor = UIColor.white
+            }
+            else
+            {
+                self.inviteParticipantsButton.backgroundColor = .black
+                self.inviteParticipantsButton.setTitleColor(.white, for: .normal)
+                self.inviteMessageLabel.textColor = UIColor.black
+            }
+            self.inviteParticipantsButton.setTitleColor(.blue, for: .selected)
             self.inviteParticipantsButton.layer.cornerRadius = 10
-            self.view.backgroundColor = .white
             self.inviteViewHeightConstraint.constant = 88
             
             self.inviteParticipantsButton.isHidden = false

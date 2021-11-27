@@ -10,5 +10,6 @@ struct PaymentEvent: Equatable
     let price: Double
     let eventDate: String
     let isOwner: Bool
+    static var didChange: Bool = true
 }
 
