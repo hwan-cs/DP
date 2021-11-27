@@ -71,7 +71,7 @@ class CategoryViewController: SwipeTableViewController
     
     override func viewWillDisappear(_ animated: Bool)
     {
-        AppUtility.lockOrientation(.all)
+        AppUtility.lockOrientation(.portrait)
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
     {

@@ -132,7 +132,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhB-IT-Ixm">
-                                <rect key="frame" x="0.0" y="140" width="410" height="756"/>
+                                <rect key="frame" x="0.0" y="88" width="410" height="808"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZv-he-7pu" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="725"/>
@@ -406,8 +406,9 @@
         <scene sceneID="msJ-as-0HF">
             <objects>
                 <navigationController storyboardIdentifier="MainNavController" id="akV-Na-Uqk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" selectedImage="house" catalog="system" id="C6n-zN-neL">
+                    <tabBarItem key="tabBarItem" title="" id="C6n-zN-neL">
                         <imageReference key="image" image="house" catalog="system" symbolScale="large"/>
+                        <imageReference key="selectedImage" image="house" catalog="system" symbolScale="medium"/>
                     </tabBarItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="uiw-2g-wpc">
@@ -447,7 +448,7 @@
                                                 </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="알림 허용" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2tk-9s-rv1">
-                                                <rect key="frame" x="8" y="0.0" width="64" height="80"/>
+                                                <rect key="frame" x="12" y="0.0" width="64" height="80"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -461,7 +462,7 @@
                                             <constraint firstAttribute="height" constant="80" id="Qkj-wG-Tys"/>
                                             <constraint firstItem="NYE-Z1-7mW" firstAttribute="top" secondItem="fIi-lG-bzA" secondAttribute="top" constant="25" id="c7k-S2-nCc"/>
                                             <constraint firstAttribute="bottom" secondItem="2tk-9s-rv1" secondAttribute="bottom" id="frV-ge-V02"/>
-                                            <constraint firstItem="2tk-9s-rv1" firstAttribute="leading" secondItem="fIi-lG-bzA" secondAttribute="leading" constant="8" id="hUn-mz-9fV"/>
+                                            <constraint firstItem="2tk-9s-rv1" firstAttribute="leading" secondItem="fIi-lG-bzA" secondAttribute="leading" constant="12" id="hUn-mz-9fV"/>
                                             <constraint firstItem="NYE-Z1-7mW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="2tk-9s-rv1" secondAttribute="trailing" constant="8" symbolic="YES" id="kpu-yQ-pZY"/>
                                         </constraints>
                                     </view>
@@ -475,7 +476,7 @@
                                                 </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="다크 모드" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Zw-Pb-oKZ">
-                                                <rect key="frame" x="8" y="0.0" width="64" height="80"/>
+                                                <rect key="frame" x="12" y="0.0" width="64" height="80"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -485,7 +486,7 @@
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="Npo-ej-dai" secondAttribute="trailing" constant="10" id="1qY-lJ-fnS"/>
                                             <constraint firstItem="Npo-ej-dai" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="9Zw-Pb-oKZ" secondAttribute="trailing" constant="8" symbolic="YES" id="6Cl-hB-jBD"/>
-                                            <constraint firstItem="9Zw-Pb-oKZ" firstAttribute="leading" secondItem="h0o-jL-quy" secondAttribute="leading" constant="8" id="7mT-qo-pah"/>
+                                            <constraint firstItem="9Zw-Pb-oKZ" firstAttribute="leading" secondItem="h0o-jL-quy" secondAttribute="leading" constant="12" id="7mT-qo-pah"/>
                                             <constraint firstItem="9Zw-Pb-oKZ" firstAttribute="top" secondItem="h0o-jL-quy" secondAttribute="top" id="Mlt-oD-jxN"/>
                                             <constraint firstItem="Npo-ej-dai" firstAttribute="top" secondItem="h0o-jL-quy" secondAttribute="top" constant="25" id="g6L-Xb-w9b"/>
                                             <constraint firstAttribute="bottom" secondItem="9Zw-Pb-oKZ" secondAttribute="bottom" id="iQH-ha-0hO"/>
@@ -526,13 +527,16 @@
                             <constraint firstItem="cth-09-HK6" firstAttribute="trailing" secondItem="hy5-4v-zp9" secondAttribute="trailing" constant="20" id="yrG-hw-mQd"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="설정" image="gear" catalog="system" id="Aom-xS-tvM">
+                    <tabBarItem key="tabBarItem" title="설정" id="Aom-xS-tvM">
+                        <imageReference key="image" image="gear" catalog="system" symbolScale="large"/>
                         <imageReference key="selectedImage" image="gear" catalog="system" symbolScale="medium"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="darkModeLabel" destination="9Zw-Pb-oKZ" id="GuP-CN-lTr"/>
                         <outlet property="darkModeSwitch" destination="Npo-ej-dai" id="Pyq-cO-gQ8"/>
                         <outlet property="darkModeView" destination="h0o-jL-quy" id="5ey-iJ-8cj"/>
                         <outlet property="mainView" destination="W1g-wF-3Cm" id="NxO-do-KWd"/>
+                        <outlet property="pushNotificationsLabel" destination="2tk-9s-rv1" id="6WD-0Q-Xts"/>
                         <outlet property="pushNotificationsView" destination="fIi-lG-bzA" id="eu9-it-6TT"/>
                         <outlet property="titleLabel" destination="hy5-4v-zp9" id="zVa-lT-baR"/>
                     </connections>
@@ -541,15 +545,15 @@
             </objects>
             <point key="canvasLocation" x="2050.7246376811595" y="692.41071428571422"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--My Tab Bar Controller-->
         <scene sceneID="N8r-RJ-bg8">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Trm-nj-RmS" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="Trm-nj-RmS" customClass="MyTabBarController" customModule="SplitBill" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="U4Q-FD-dRN">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.30588235294117649" green="0.62352941176470589" blue="0.23921568627450979" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.30588235289999999" green="0.62352941179999999" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="barTintColor" red="0.30588235289999999" green="0.62352941179999999" blue="0.23921568630000001" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <userDefinedRuntimeAttributes>

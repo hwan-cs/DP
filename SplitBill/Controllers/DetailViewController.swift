@@ -346,7 +346,7 @@ class DetailViewController: UIViewController
         }
         self.saveButtonView.removeFromSuperview()
         self.saveButton.removeFromSuperview()
-        AppUtility.lockOrientation(.all)
+        AppUtility.lockOrientation(.portrait)
     }
     override func viewDidDisappear(_ animated: Bool)
     {

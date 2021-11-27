@@ -15,6 +15,8 @@ class SettingsViewController: UIViewController
     @IBOutlet var darkModeView: UIView!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var darkModeSwitch: UISwitch!
+    @IBOutlet var darkModeLabel: UILabel!
+    @IBOutlet var pushNotificationsLabel: UILabel!
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -25,6 +27,8 @@ class SettingsViewController: UIViewController
     {
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         initView(isDarkOn)
+        darkModeLabel.attributedText = NSAttributedString(string: "다크 모드", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor.black ])
+        pushNotificationsLabel.attributedText = NSAttributedString(string: "알림 허용", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor.black ])
     }
     func initView(_ isDarkOn: Bool)
     {
@@ -45,7 +49,6 @@ class SettingsViewController: UIViewController
         }
         let NVshadowView = UIView(frame: CGRect(x: -5, y: 0, width: pushNotificationsView.bounds.width+10, height: pushNotificationsView.bounds.height))
         let DMshadowView = UIView(frame: CGRect(x: -5, y: 0, width: darkModeView.bounds.width+10, height: darkModeView.bounds.height))
-        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         if #available(iOS 13.0, *)
         {
             overrideUserInterfaceStyle = isDarkOn ? .dark : .light
@@ -57,23 +60,18 @@ class SettingsViewController: UIViewController
         if isDarkOn == true
         {
             darkModeSwitch.isOn = true
-            NVshadowView.backgroundColor = .lightGray
-            NVshadowView.layer.borderColor = UIColor.black.cgColor
-            DMshadowView.backgroundColor = .lightGray
-            DMshadowView.layer.borderColor = UIColor.black.cgColor
-            NVshadowView.layer.shadowColor = UIColor.white.cgColor
-            DMshadowView.layer.shadowColor = UIColor.white.cgColor
         }
         else
         {
             darkModeSwitch.isOn = false
-            NVshadowView.backgroundColor = .white
-            NVshadowView.layer.borderColor = UIColor.lightGray.cgColor
-            DMshadowView.backgroundColor = .white
-            DMshadowView.layer.borderColor = UIColor.lightGray.cgColor
-            NVshadowView.layer.shadowColor = UIColor.black.cgColor
-            DMshadowView.layer.shadowColor = UIColor.black.cgColor
         }
+        NVshadowView.backgroundColor = .white
+        NVshadowView.layer.borderColor = UIColor.lightGray.cgColor
+        DMshadowView.backgroundColor = .white
+        DMshadowView.layer.borderColor = UIColor.lightGray.cgColor
+        NVshadowView.layer.shadowColor = UIColor.black.cgColor
+        DMshadowView.layer.shadowColor = UIColor.black.cgColor
+        
         NVshadowView.layer.cornerRadius = 25
         NVshadowView.layer.borderWidth = 1
         NVshadowView.layer.shadowOpacity = 0.2

@@ -16,6 +16,7 @@
 		1A83E99526F73E61006F2C4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A83E99426F73E61006F2C4E /* Assets.xcassets */; };
 		1A83E99826F73E61006F2C4E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A83E99626F73E61006F2C4E /* LaunchScreen.storyboard */; };
 		1A83E9A326F74CF2006F2C4E /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A83E9A226F74CF2006F2C4E /* KeychainItem.swift */; };
+		1A8648842752A0AB006CFD70 /* MyTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8648832752A0AA006CFD70 /* MyTabBarController.swift */; };
 		1A8B54F82732DBCA00B6A212 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8B54F72732DBCA00B6A212 /* DetailViewController.swift */; };
 		1A9AEF622709A7D300DA0F35 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9AEF612709A7D300DA0F35 /* CategoryViewController.swift */; };
 		1A9AEF642709A84C00DA0F35 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9AEF632709A84C00DA0F35 /* SwipeTableViewController.swift */; };
@@ -36,6 +37,7 @@
 		1A83E99926F73E61006F2C4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A83E9A226F74CF2006F2C4E /* KeychainItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
 		1A83E9A626F75B7C006F2C4E /* SplitBill.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SplitBill.entitlements; sourceTree = "<group>"; };
+		1A8648832752A0AA006CFD70 /* MyTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTabBarController.swift; sourceTree = "<group>"; };
 		1A8B54F72732DBCA00B6A212 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		1A8B54F9273828B300B6A212 /* SplitBillRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SplitBillRelease.entitlements; sourceTree = "<group>"; };
 		1A9AEF612709A7D300DA0F35 /* CategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				1A83E98F26F73E5E006F2C4E /* LoginViewController.swift */,
 				1A8B54F72732DBCA00B6A212 /* DetailViewController.swift */,
 				1A0A9144274B8114001F24C0 /* SettingsViewController.swift */,
+				1A8648832752A0AA006CFD70 /* MyTabBarController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 			files = (
 				1A703040272D6E2D00615000 /* PaymentEvent.swift in Sources */,
 				1A9AEF622709A7D300DA0F35 /* CategoryViewController.swift in Sources */,
+				1A8648842752A0AB006CFD70 /* MyTabBarController.swift in Sources */,
 				1AE13F1D2744D36900633B7C /* AppUtility.swift in Sources */,
 				1A0A9145274B8115001F24C0 /* SettingsViewController.swift in Sources */,
 				1A83E9A326F74CF2006F2C4E /* KeychainItem.swift in Sources */,
