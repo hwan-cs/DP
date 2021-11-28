@@ -16,6 +16,7 @@ class SettingsViewController: UIViewController
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var darkModeSwitch: UISwitch!
     @IBOutlet var darkModeLabel: UILabel!
+    @IBOutlet var pushNotificationSwitch: UISwitch!
     @IBOutlet var pushNotificationsLabel: UILabel!
     override func viewDidLoad()
     {
@@ -26,11 +27,12 @@ class SettingsViewController: UIViewController
     override func viewWillAppear(_ animated: Bool)
     {
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
-        initView(isDarkOn)
-        darkModeLabel.attributedText = NSAttributedString(string: "다크 모드", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor.black ])
-        pushNotificationsLabel.attributedText = NSAttributedString(string: "알림 허용", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor.black ])
+        let isPNOn = UserDefaults.standard.bool(forKey: "prefs_is_push_notification_on")
+        initView(isDarkOn, isPNOn)
+        darkModeLabel.attributedText = NSAttributedString(string: "다크 모드", attributes: [ .font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: UIColor.black ])
+        pushNotificationsLabel.attributedText = NSAttributedString(string: "알림 허용", attributes: [ .font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: UIColor.black ])
     }
-    func initView(_ isDarkOn: Bool)
+    func initView(_ isDarkOn: Bool, _ isPushNotificationOn: Bool)
     {
         titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
         for subview in pushNotificationsView.subviews
@@ -65,6 +67,14 @@ class SettingsViewController: UIViewController
         {
             darkModeSwitch.isOn = false
         }
+        if isPushNotificationOn == true
+        {
+            pushNotificationSwitch.isOn = true
+        }
+        else
+        {
+            pushNotificationSwitch.isOn = false
+        }
         NVshadowView.backgroundColor = .white
         NVshadowView.layer.borderColor = UIColor.lightGray.cgColor
         DMshadowView.backgroundColor = .white
@@ -90,21 +100,28 @@ class SettingsViewController: UIViewController
     }
     @IBAction func pushNotificationSwitchDidChange(_ sender: UISwitch)
     {
+        UserDefaults.standard.set(sender.isOn, forKey: "prefs_is_push_notification_on")
         if sender.isOn == false
         {
             Notification.pushNotificationOn = false
-            Notification.manager.notifications.removeAll()
-            print(Notification.manager.notifications)
         }
         else
         {
+            PaymentEvent.didChange = true
             Notification.pushNotificationOn = true
         }
+        if let tabbarC = self.tabBarController
+        {
+            tabbarC.selectedIndex = 0
+            let home = tabbarC.tabBar.selectedItem
+            self.tabBarController?.tabBar(tabbarC.tabBar, didSelect: home!)
+        }
+        
     }
     @IBAction func darkModeSwitchDidChange(_ sender: UISwitch)
     {
         UserDefaults.standard.set(darkModeSwitch.isOn, forKey: "prefs_is_dark_mode_on")
-        initView(sender.isOn)
+        initView(sender.isOn, pushNotificationSwitch.isOn)
     }
     
 }

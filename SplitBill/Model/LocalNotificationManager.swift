@@ -14,8 +14,7 @@ struct Notification
     var title: String
     var body: String
     var datetime: DateComponents
-    static var manager = LocalNotificationManager()
-    static var pushNotificationOn: Bool = true
+    static var pushNotificationOn: Bool = UserDefaults.standard.bool(forKey: "prefs_is_push_notification_on")
 }
 
 class LocalNotificationManager
@@ -71,7 +70,7 @@ class LocalNotificationManager
             content.body = notification.body
             content.sound = .default
 
-            let trigger = UNCalendarNotificationTrigger(dateMatching: notification.datetime, repeats: false)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: notification.datetime, repeats: true)
 
             let request = UNNotificationRequest(identifier: notification.id, content: content, trigger: trigger)
 

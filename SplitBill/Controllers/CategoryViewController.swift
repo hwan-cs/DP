@@ -17,6 +17,7 @@ class CategoryViewController: SwipeTableViewController
     var paymentArray: [PaymentEvent] = []
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
+    var manager = LocalNotificationManager()
     
     override func viewDidLoad()
     {
@@ -31,6 +32,7 @@ class CategoryViewController: SwipeTableViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
+        print("viewwillappear")
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         if #available(iOS 13.0, *)
         {
@@ -157,11 +159,6 @@ class CategoryViewController: SwipeTableViewController
             completion(true)
             return
         }
-        if Notification.pushNotificationOn == false
-        {
-            completion(true)
-            return
-        }
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
         { querySnapShot, error in
             self.paymentArray = []
@@ -185,82 +182,78 @@ class CategoryViewController: SwipeTableViewController
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
                                 self.paymentArray.append(newEvent)
                                 
-                                if Notification.pushNotificationOn == false
+                                if Notification.pushNotificationOn == true
                                 {
+                                    let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+
+                                    let EOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
+
+                                    let SDMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+
+                                    let SOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+
+                                    let EOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
+
+                                    let SDMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+                                    
+                                    if owner == Auth.auth().currentUser?.email
+                                    {
+                                        if eventDate == "SOM"
+                                        {
+                                            self.manager.notifications.append(SOMNotificationOwner)
+                                        }
+                                        else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
+                                        {
+                                            if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
+                                            {
+                                                self.manager.notifications = [EOMNotificationOwner]
+                                            }
+                                            else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
+                                            {
+                                                var foo = EOMNotificationOwner
+                                                foo.datetime.day =  foo.datetime.day!-1
+                                                self.manager.notifications.append(foo)
+                                            }
+                                            else
+                                            {
+                                                self.manager.notifications.append(EOMNotificationOwner)
+                                            }
+                                        }
+                                        else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
+                                        {
+                                            self.manager.notifications.append(SDMNotificationOwner)
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if eventDate == "SOM"
+                                        {
+                                            self.manager.notifications.append(SOMNotificationParticipants)
+                                        }
+                                        else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
+                                        {
+                                            if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
+                                            {
+                                                self.manager.notifications.append(EOMNotificationParticipants)
+                                            }
+                                            else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
+                                            {
+                                                var foo = EOMNotificationParticipants
+                                                foo.datetime.day = foo.datetime.day!-1
+                                                self.manager.notifications.append(foo)
+                                            }
+                                            else
+                                            {
+                                                self.manager.notifications.append(EOMNotificationParticipants)
+                                            }
+                                        }
+                                        else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
+                                        {
+                                            self.manager.notifications.append(SDMNotificationParticipants)
+                                        }
+                                    }
                                     PaymentEvent.didChange = false
-                                    break
                                 }
-                                let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
-
-                                let EOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
-
-                                let SDMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(price)원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
-
-                                let SOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
-
-                                let EOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
-
-                                let SDMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
-                                
-                                if owner == Auth.auth().currentUser?.email
-                                {
-                                    if eventDate == "SOM"
-                                    {
-                                        Notification.manager.notifications = [SOMNotificationOwner]
-                                    }
-                                    else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
-                                    {
-                                        if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
-                                        {
-                                            Notification.manager.notifications = [EOMNotificationOwner]
-                                        }
-                                        else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
-                                        {
-                                            var foo = EOMNotificationOwner
-                                            foo.datetime.day =  foo.datetime.day!-1
-                                            Notification.manager.notifications = [foo]
-                                        }
-                                        else
-                                        {
-                                            Notification.manager.notifications = [EOMNotificationOwner]
-                                        }
-                                    }
-                                    else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
-                                    {
-                                        Notification.manager.notifications = [SDMNotificationOwner]
-                                    }
-                                }
-                                else
-                                {
-                                    if eventDate == "SOM"
-                                    {
-                                        Notification.manager.notifications = [SOMNotificationParticipants]
-                                    }
-                                    else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
-                                    {
-                                        if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
-                                        {
-                                            Notification.manager.notifications = [EOMNotificationParticipants]
-                                        }
-                                        else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
-                                        {
-                                            var foo = EOMNotificationParticipants
-                                            foo.datetime.day = foo.datetime.day!-1
-                                            Notification.manager.notifications = [foo]
-                                        }
-                                        else
-                                        {
-                                            Notification.manager.notifications = [EOMNotificationParticipants]
-                                        }
-                                    }
-                                    else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
-                                    {
-                                        Notification.manager.notifications = [SDMNotificationParticipants]
-                                    }
-                                }
-                                Notification.manager.schedule()
-                                print(Notification.manager.notifications)
-                                PaymentEvent.didChange = false
                             }
                         }
                     }
@@ -268,6 +261,15 @@ class CategoryViewController: SwipeTableViewController
             }
             DispatchQueue.main.async
             {
+                if Notification.pushNotificationOn == true
+                {
+                    self.manager.schedule()
+                }
+                else
+                {
+                    self.manager.notifications.removeAll()
+                    self.manager.schedule()
+                }
                 self.tableView.reloadData()
                 completion(true)
             }
