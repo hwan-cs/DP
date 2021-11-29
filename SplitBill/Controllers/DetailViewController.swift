@@ -66,16 +66,6 @@ class DetailViewController: UIViewController
         super.viewDidLoad()
         self.hideKeyboard()
         
-        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
-        if #available(iOS 13.0, *)
-        {
-            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
-        }
-        else
-        {
-            view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
-        }
-        
         listOfParticipants.numberOfLines = 0
         button.setTitle("", for: .normal)
         selectDateButton.setTitle("", for: .normal)
@@ -370,6 +360,17 @@ class DetailViewController: UIViewController
             self.tabBarController?.view.bringSubviewToFront(saveButton)
         }
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        if #available(iOS 13.0, *)
+        {
+            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
+        }
+        else
+        {
+            view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
+        }
+        contentView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        inviteView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        
         var str: String?
         if self.event?.eventDate == "SOM"
         {
