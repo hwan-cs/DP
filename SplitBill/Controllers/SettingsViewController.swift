@@ -73,14 +73,9 @@ class SettingsViewController: UIViewController
         }
         let NVshadowView = UIView(frame: CGRect(x: -5, y: 0, width: pushNotificationsView.bounds.width+10, height: pushNotificationsView.bounds.height))
         let DMshadowView = UIView(frame: CGRect(x: -5, y: 0, width: darkModeView.bounds.width+10, height: darkModeView.bounds.height))
-        if #available(iOS 13.0, *)
-        {
-            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
-        }
-        else
-        {
-            view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
-        }
+        mainView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        darkModeView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        pushNotificationsView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         if isDarkOn == true
         {
             madeByLabel.textColor = .white
@@ -117,6 +112,7 @@ class SettingsViewController: UIViewController
         DMshadowView.layer.shadowOpacity = 0.2
         DMshadowView.layer.shadowOffset = .zero
         DMshadowView.layer.shadowRadius = 5
+        
         pushNotificationsView.addSubview(NVshadowView)
         pushNotificationsView.sendSubviewToBack(NVshadowView)
         darkModeView.addSubview(DMshadowView)

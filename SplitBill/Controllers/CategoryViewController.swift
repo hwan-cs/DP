@@ -34,9 +34,9 @@ class CategoryViewController: SwipeTableViewController
     {
         print("viewwillappear")
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         if #available(iOS 13.0, *)
         {
-            overrideUserInterfaceStyle = isDarkOn ? .dark : .light
             let appearance = UINavigationBarAppearance()
             appearance.configureWithDefaultBackground()
             appearance.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
@@ -50,8 +50,6 @@ class CategoryViewController: SwipeTableViewController
         }
         else
         {
-           // Fallback on earlier versions
-           view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
            navigationController?.navigationBar.barTintColor = .systemGreen
         }
         let selectedRow: IndexPath? = tableView.indexPathForSelectedRow
@@ -291,7 +289,7 @@ class CategoryViewController: SwipeTableViewController
 
         let cellView = UIView(frame: CGRect(x: 5, y: 5, width: tableView.bounds.width-10, height: 80))
         cellView.layer.cornerRadius = 25
-        cellView.layer.borderWidth = 5
+        cellView.layer.borderWidth = 1
         
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         if isDarkOn == true
