@@ -65,14 +65,14 @@
         <scene sceneID="8tC-7b-8K9">
             <objects>
                 <tableViewController id="EHi-C8-Uss" customClass="CategoryViewController" customModule="SplitBill" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="I2x-Yo-Jce">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="I2x-Yo-Jce">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="sectionIndexBackgroundColor" red="0.17479766460000001" green="0.65953231459999995" blue="0.30471401720000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="oiI-ah-07U" detailTextLabel="F1p-8A-jr1" style="IBUITableViewCellStyleValue1" id="Nt2-Lm-f9z" customClass="SwipeTableViewCell" customModule="SwipeCellKit">
-                                <rect key="frame" x="0.0" y="44.666666030883789" width="414" height="43.666667938232422"/>
+                                <rect key="frame" x="0.0" y="31.666666030883789" width="414" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Nt2-Lm-f9z" id="eKR-Tp-UxA">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
@@ -132,7 +132,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhB-IT-Ixm">
-                                <rect key="frame" x="0.0" y="140" width="410" height="756"/>
+                                <rect key="frame" x="0.0" y="88" width="410" height="808"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZv-he-7pu" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="410" height="725"/>
@@ -205,7 +205,8 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="yF8-VZ-YSc" secondAttribute="trailing" id="IOH-8h-NMT"/>
                                                     <constraint firstAttribute="width" constant="182" id="enC-XE-cWF"/>
@@ -243,11 +244,12 @@
                                                         <textInputTraits key="textInputTraits"/>
                                                     </textField>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JOq-K9-cw4">
-                                                        <rect key="frame" x="0.0" y="0.0" width="205" height="36"/>
+                                                        <rect key="frame" x="0.0" y="2" width="205" height="34"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="36" id="M6s-fS-YCF"/>
+                                                            <constraint firstAttribute="height" constant="34" id="M6s-fS-YCF"/>
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="205" id="wMv-e9-VNs"/>
                                                         </constraints>
+                                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="plain"/>
                                                         <connections>
@@ -255,12 +257,13 @@
                                                         </connections>
                                                     </button>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="JOq-K9-cw4" secondAttribute="bottom" id="5dh-Rs-GjA"/>
                                                     <constraint firstItem="JOq-K9-cw4" firstAttribute="leading" secondItem="cHD-ux-JK1" secondAttribute="leading" id="5fK-Of-0Mp"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="JOq-K9-cw4" secondAttribute="trailing" id="7YP-GN-gxN"/>
-                                                    <constraint firstItem="JOq-K9-cw4" firstAttribute="top" secondItem="cHD-ux-JK1" secondAttribute="top" id="7cM-eS-34j"/>
+                                                    <constraint firstItem="JOq-K9-cw4" firstAttribute="top" secondItem="cHD-ux-JK1" secondAttribute="top" constant="2" id="7cM-eS-34j"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVf-Zx-7Xl">

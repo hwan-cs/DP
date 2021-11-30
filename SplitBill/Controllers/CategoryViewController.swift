@@ -15,6 +15,7 @@ class CategoryViewController: SwipeTableViewController
 {
 //    let realm = try! Realm()
     var paymentArray: [PaymentEvent] = []
+    var participantEventArray: [PaymentEvent] = []
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
     var manager = LocalNotificationManager()
@@ -152,6 +153,7 @@ class CategoryViewController: SwipeTableViewController
         EOM.day = -1
         let endOfMonth = Calendar.current.date(byAdding: EOM, to: startOfMonth)
         print(dateFormatter.string(from: endOfMonth!))
+        print(PaymentEvent.didChange)
         if PaymentEvent.didChange == false && Notification.pushNotificationOn == true
         {
             completion(true)
@@ -160,6 +162,8 @@ class CategoryViewController: SwipeTableViewController
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
         { querySnapShot, error in
             self.paymentArray = []
+            self.participantEventArray = []
+            self.manager.notifications.removeAll()
             if let e = error
             {
                 print("There was an issue retrieving data from Firestore \(e)")
@@ -178,7 +182,14 @@ class CategoryViewController: SwipeTableViewController
                                 , let FIRDocID = doc.documentID as? String
                             {
                                 let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
-                                self.paymentArray.append(newEvent)
+                                if newEvent.isOwner == true
+                                {
+                                    self.paymentArray.append(newEvent)
+                                }
+                                else
+                                {
+                                    self.participantEventArray.append(newEvent)
+                                }
                                 
                                 if Notification.pushNotificationOn == true
                                 {
@@ -285,39 +296,96 @@ class CategoryViewController: SwipeTableViewController
                 subview.removeFromSuperview()
             }
         }
-        var content = cell.defaultContentConfiguration()
-
-        let cellView = UIView(frame: CGRect(x: 5, y: 5, width: tableView.bounds.width-10, height: 80))
+        var ownerContent = cell.defaultContentConfiguration()
+        var participantContent = cell.defaultContentConfiguration()
+        var summaryContent = cell.defaultContentConfiguration()
+        
+        var cellView = UIView(frame: CGRect(x: 8, y: 6, width: tableView.bounds.width-16, height: 78))
+        let summaryCellView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 90))
         cellView.layer.cornerRadius = 25
         cellView.layer.borderWidth = 1
         
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
-        if isDarkOn == true
+        if indexPath.section == 0 && self.paymentArray.count != 0
         {
-            cellView.layer.shadowColor = UIColor.white.cgColor
-            cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
-            cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
-            content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
-            content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+            if isDarkOn == true
+            {
+                cellView.layer.shadowColor = UIColor.white.cgColor
+                cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
+                ownerContent.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+                ownerContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+            }
+            else
+            {
+                cellView.layer.shadowColor = UIColor.black.cgColor
+                cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
+                ownerContent.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+                ownerContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+            }
         }
-        else
+        else if indexPath.section == 1 && self.participantEventArray.count != 0
         {
-            cellView.layer.shadowColor = UIColor.black.cgColor
-            cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
-            cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
-            content.attributedText = NSAttributedString(string: paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
-            content.secondaryAttributedText = NSAttributedString(string: "\(String(Int(paymentArray[indexPath.row].price/Double(paymentArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+            if isDarkOn == true
+            {
+                cellView.layer.shadowColor = UIColor.white.cgColor
+                cellView.backgroundColor = UIColor(red: 0.83, green: 0.67, blue: 0.17, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 1.00, green: 0.80, blue: 0.11, alpha: 1.00).cgColor
+                participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+                participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+            }
+            else
+            {
+                cellView.layer.shadowColor = UIColor.black.cgColor
+                cellView.backgroundColor = UIColor(red: 1.00, green: 0.80, blue: 0.11, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 0.83, green: 0.67, blue: 0.17, alpha: 1.00).cgColor
+                participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+                participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+            }
         }
-    
+        else if indexPath.section == 2
+        {
+            cellView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 90))
+            cellView.backgroundColor = UIColor(red: 0.69, green: 0.37, blue: 0.15, alpha: 1.00)
+            cellView.layer.borderColor = UIColor(red: 0.49, green: 0.22, blue: 0.05, alpha: 1.00).cgColor
+            var total = 0.0
+            for el in paymentArray
+            {
+                total = total + el.price
+            }
+            for el in participantEventArray
+            {
+                total = total + el.price/Double(el.participants.count)
+            }
+            if isDarkOn == true
+            {
+                summaryContent.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+            }
+            else
+            {
+                summaryContent.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+            }
+        }
         cell.backgroundColor = .clear
-        cell.contentConfiguration = content
-        
-        
+        if indexPath.section == 0
+        {
+            cell.contentConfiguration = ownerContent
+        }
+        else if indexPath.section == 1
+        {
+            cell.contentConfiguration = participantContent
+        }
+        else if indexPath.section == 2
+        {
+            cell.contentConfiguration = summaryContent
+        }
         cellView.layer.shadowOpacity = 0.5
         cellView.layer.shadowOffset = .zero
         cellView.layer.shadowRadius = 8
         
         cellView.layer.masksToBounds = false
+        
         cell.contentView.addSubview(cellView)
         cell.contentView.sendSubviewToBack(cellView)
         
@@ -329,16 +397,64 @@ class CategoryViewController: SwipeTableViewController
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return paymentArray.count
+        if section == 0
+        {
+            return paymentArray.count
+        }
+        else if section == 1
+        {
+            return participantEventArray.count
+        }
+        return 1
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int
+    {
+        return 3
+    }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        let label = UILabel()
+        label.frame = CGRect.init(x: 12, y: 5, width: headerView.frame.width-12, height: headerView.frame.height)
+        if section == 0
+        {
+            label.attributedText = NSAttributedString(string: "내가 내는 구독권", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+        }
+        else if section == 1
+        {
+            label.attributedText = NSAttributedString(string: "보내야 하는 구독권", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+        }
+        else if section == 2
+        {
+            label.attributedText = NSAttributedString(string: "매달 지불 금액", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+        }
+        if isDarkOn == true
+        {
+            label.textColor = .white
+        }
+        headerView.addSubview(label)
+        
+        return headerView
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
     {
-        return 1
+        return 50
     }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        //self.tabBarController?.tabBar.isHidden = true
         performSegue(withIdentifier: "goToEvent", sender: self)
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
+    {
+        if indexPath.section == 2
+        {
+            return nil
+        }
+        return indexPath
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
@@ -348,7 +464,14 @@ class CategoryViewController: SwipeTableViewController
             //current row that is selected
             if let indexPath = tableView.indexPathForSelectedRow
             {
-                destinationVC.event = paymentArray[indexPath.row]
+                if indexPath.section == 0
+                {
+                    destinationVC.event = paymentArray[indexPath.row]
+                }
+                else if indexPath.section == 1
+                {
+                    destinationVC.event = participantEventArray[indexPath.row]
+                }
             }
         }
     }
@@ -356,7 +479,7 @@ class CategoryViewController: SwipeTableViewController
     //MARK: - Delete Data from swipe
     override func updateModel(at indexPath: IndexPath)
     {
-        if paymentArray[indexPath.row].isOwner == true
+        if indexPath.section == 0
         {
             db.collection("events").document(paymentArray[indexPath.row].FIRDocID).delete()
             {   err in
@@ -369,10 +492,21 @@ class CategoryViewController: SwipeTableViewController
                     print("Document successfully removed!")
                 }
             }
+            for (index, element) in self.manager.notifications.enumerated()
+            {
+                print(index)
+                if self.manager.notifications[index].id == paymentArray[indexPath.row].FIRDocID
+                {
+                    self.manager.notifications.remove(at: index)
+                    self.manager.schedule()
+                    break
+                }
+            }
+            paymentArray.remove(at: indexPath.row)
         }
-        else if paymentArray[indexPath.row].isOwner == false
+        else if indexPath.section == 1
         {
-            db.collection("events").document(paymentArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser?.email!])])
+            db.collection("events").document(participantEventArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser?.email!])])
             { err in
                 if let err = err
                 {
@@ -383,8 +517,17 @@ class CategoryViewController: SwipeTableViewController
                     print("Document successfully removed!")
                 }
             }
+            for (index, element) in self.manager.notifications.enumerated()
+            {
+                if self.manager.notifications[index].id == participantEventArray[indexPath.row].FIRDocID
+                {
+                    self.manager.notifications.remove(at: index)
+                    self.manager.schedule()
+                    break
+                }
+            }
+            participantEventArray.remove(at: indexPath.row)
         }
-        paymentArray.remove(at: indexPath.row)
     }
 }
 

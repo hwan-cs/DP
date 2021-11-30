@@ -283,6 +283,7 @@ class DetailViewController: UIViewController
                 }
             }
             self.listOfParticipants.text = tempList
+            self.didChange = self.event
             self.initView(self.event!.isOwner)
         }
         AppUtility.lockOrientation(.portrait)
@@ -370,6 +371,7 @@ class DetailViewController: UIViewController
         }
         contentView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         inviteView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         
         var str: String?
         if self.event?.eventDate == "SOM"
