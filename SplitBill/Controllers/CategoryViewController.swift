@@ -330,16 +330,16 @@ class CategoryViewController: SwipeTableViewController
             if isDarkOn == true
             {
                 cellView.layer.shadowColor = UIColor.white.cgColor
-                cellView.backgroundColor = UIColor(red: 0.83, green: 0.67, blue: 0.17, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 1.00, green: 0.80, blue: 0.11, alpha: 1.00).cgColor
+                cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
                 participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
             else
             {
                 cellView.layer.shadowColor = UIColor.black.cgColor
-                cellView.backgroundColor = UIColor(red: 1.00, green: 0.80, blue: 0.11, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 0.83, green: 0.67, blue: 0.17, alpha: 1.00).cgColor
+                cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
+                cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
                 participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
@@ -347,8 +347,16 @@ class CategoryViewController: SwipeTableViewController
         else if indexPath.section == 2
         {
             cellView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 90))
-            cellView.backgroundColor = UIColor(red: 0.69, green: 0.37, blue: 0.15, alpha: 1.00)
-            cellView.layer.borderColor = UIColor(red: 0.49, green: 0.22, blue: 0.05, alpha: 1.00).cgColor
+            if isDarkOn == true
+            {
+                cellView.layer.shadowColor = UIColor.white.cgColor
+            }
+            else
+            {
+                cellView.layer.shadowColor = UIColor.black.cgColor
+            }
+            cellView.backgroundColor = UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+            cellView.layer.borderColor = UIColor.black.cgColor
             var total = 0.0
             for el in paymentArray
             {
@@ -358,14 +366,7 @@ class CategoryViewController: SwipeTableViewController
             {
                 total = total + el.price/Double(el.participants.count)
             }
-            if isDarkOn == true
-            {
-                summaryContent.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
-            }
-            else
-            {
-                summaryContent.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
-            }
+            summaryContent.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
         }
         cell.backgroundColor = .clear
         if indexPath.section == 0
@@ -506,7 +507,7 @@ class CategoryViewController: SwipeTableViewController
         }
         else if indexPath.section == 1
         {
-            db.collection("events").document(participantEventArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser?.email!])])
+            db.collection("events").document(participantEventArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser!.email!])])
             { err in
                 if let err = err
                 {
