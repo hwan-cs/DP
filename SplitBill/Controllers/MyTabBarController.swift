@@ -36,7 +36,19 @@ class MyTabBarController: UITabBarController
             self.indicatorImage?.center.x = newCenterX
         }
     }
-
+    override var shouldAutorotate: Bool
+    {
+        return false
+    }
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask
+    {
+        return .portrait
+    }
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
+    {
+        return .portrait
+    }
+    
     func createSelectionIndicator(color: UIColor, size: CGSize, lineHeight: CGFloat) -> UIImage
     {
         let rect: CGRect = CGRect(x: 0, y: size.height - lineHeight, width: size.width, height: lineHeight )

@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 {
 
     var window: UIWindow?
-    var orientationLock = UIInterfaceOrientationMask.all
     var flag: Bool = true
     
     override init()
@@ -58,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         }
         return true
     }
-    
+
     func handleIncomingDynamicLink(_ dynamiclink: DynamicLink)
     {
         guard let url = dynamiclink.url else
@@ -145,10 +144,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             return true
         }
         return GIDSignIn.sharedInstance.handle(url)
-    }
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask
-    {
-        return self.orientationLock
     }
 }
 

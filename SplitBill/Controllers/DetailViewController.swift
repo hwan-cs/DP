@@ -286,9 +286,7 @@ class DetailViewController: UIViewController
             self.didChange = self.event
             self.initView(self.event!.isOwner)
         }
-        AppUtility.lockOrientation(.portrait)
     }
-    
     override func viewWillDisappear(_ animated: Bool)
     {
         var price = self.event!.price
@@ -337,7 +335,6 @@ class DetailViewController: UIViewController
         }
         self.saveButtonView.removeFromSuperview()
         self.saveButton.removeFromSuperview()
-        AppUtility.lockOrientation(.portrait)
     }
     override func viewDidDisappear(_ animated: Bool)
     {

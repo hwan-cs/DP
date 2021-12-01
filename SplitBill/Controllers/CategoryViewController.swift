@@ -58,7 +58,6 @@ class CategoryViewController: SwipeTableViewController
         {
             tableView.deselectRow(at: selectedRowNotNill, animated: true)
         }
-        AppUtility.lockOrientation(.portrait)
         self.view.isUserInteractionEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
         {
@@ -68,11 +67,6 @@ class CategoryViewController: SwipeTableViewController
             }
         }
         tableView.reloadData()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool)
-    {
-        AppUtility.lockOrientation(.portrait)
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
     {
@@ -313,6 +307,7 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.white.cgColor
                 cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
+                ownerContent.textProperties.numberOfLines = 1
                 ownerContent.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 ownerContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
@@ -321,6 +316,7 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.black.cgColor
                 cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
+                ownerContent.textProperties.numberOfLines = 1
                 ownerContent.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 ownerContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
@@ -332,6 +328,7 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.white.cgColor
                 cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
+                participantContent.textProperties.numberOfLines = 1
                 participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
@@ -340,6 +337,7 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.black.cgColor
                 cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
+                participantContent.textProperties.numberOfLines = 1
                 participantContent.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 participantContent.secondaryAttributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }

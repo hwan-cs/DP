@@ -23,21 +23,14 @@ class LoginViewController: UIViewController
         view.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
         setupProviderLoginView()
     }
-    override func viewWillAppear(_ animated: Bool)
-    {
-        AppUtility.lockOrientation(.portrait)
-    }
-    override func viewWillDisappear(_ animated: Bool)
-    {
-        AppUtility.lockOrientation(.all)
-    }
     @IBAction func signIn(_ sender: Any)
     {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientID)
 
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { user, error in
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self)
+        { user, error in
 //          guard error == nil else { return }
 //            guard let user = user else { return }
             guard
@@ -65,17 +58,12 @@ class LoginViewController: UIViewController
                 let metadata = currentUser?.metadata
                 DispatchQueue.main.async
                 {
-//                    viewController.emailLabel.text = "Email: \(emailAddress!)"
-//                    viewController.familyNameLabel.text = "Phone number: "
-//                    viewController.givenNameLabel.text = "Metadata: \(metadata!)"
-//                    viewController.fullNameLabel.text = "Full name: \(fullName!)"
                     self.dismiss(animated: true, completion: nil)
                 }
             }
         }
     }
     }
-    
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
