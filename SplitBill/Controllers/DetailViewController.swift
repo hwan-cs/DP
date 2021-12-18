@@ -241,6 +241,8 @@ class DetailViewController: UIViewController
     
     override func viewWillAppear(_ animated: Bool)
     {
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        let color = isDarkOn ? UIColor.white : UIColor.black
         if event?.eventName == ""
         {
             loadFromInvitation { success in
@@ -251,16 +253,17 @@ class DetailViewController: UIViewController
                     let participantsArray = self.event!.participants
                     for (index, people) in participantsArray.enumerated()
                     {
-                        if index == 0
+                        if index != 0
                         {
-                            tempList.append("\(people)")
-                        }
-                        else
-                        {
-                            tempList.append("\n\(people)")
+                            tempList.append("\(people)\n")
                         }
                     }
-                    self.listOfParticipants.text = tempList
+                    let labelText = NSMutableAttributedString()
+                    let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+                    let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+                    labelText.append(ownerText)
+                    labelText.append(participantText)
+                    self.listOfParticipants.attributedText = labelText
                     self.didChange = self.event
                     self.initView(self.event!.isOwner)
                 }
@@ -273,16 +276,17 @@ class DetailViewController: UIViewController
             let participantsArray = self.event!.participants
             for (index, people) in participantsArray.enumerated()
             {
-                if index == 0
+                if index != 0
                 {
-                    tempList.append("\(people)")
-                }
-                else
-                {
-                    tempList.append("\n\(people)")
+                    tempList.append("\(people)\n")
                 }
             }
-            self.listOfParticipants.text = tempList
+            let labelText = NSMutableAttributedString()
+            let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+            let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+            labelText.append(ownerText)
+            labelText.append(participantText)
+            self.listOfParticipants.attributedText = labelText
             self.didChange = self.event
             self.initView(self.event!.isOwner)
         }

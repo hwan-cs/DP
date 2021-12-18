@@ -52,10 +52,6 @@ class LoginViewController: UIViewController
             else
             {
                 print("Login Successful")
-                let currentUser = Auth.auth().currentUser
-                let emailAddress = currentUser?.email
-                let fullName = currentUser?.displayName
-                let metadata = currentUser?.metadata
                 DispatchQueue.main.async
                 {
                     self.dismiss(animated: true, completion: nil)
@@ -116,19 +112,19 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
-            
+            print(userIdentifier, fullName, email)
             // For the purpose of this demo app, store the `userIdentifier` in the keychain.
             self.saveUserInKeychain(userIdentifier)
             
             // For the purpose of this demo app, show the Apple ID credential information in the `CategoryViewController`.
             self.showCategoryViewController(userIdentifier: userIdentifier, fullName: fullName, email: email)
-        
+            
         case let passwordCredential as ASPasswordCredential:
         
             // Sign in using an existing iCloud Keychain credential.
             let username = passwordCredential.user
             let password = passwordCredential.password
-            
+            print(username, password)
             // For the purpose of this demo app, show the password credential as an alert.
             DispatchQueue.main.async {
                 self.showPasswordCredentialAlert(username: username, password: password)
@@ -148,11 +144,10 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
     }
     
     private func showCategoryViewController(userIdentifier: String, fullName: PersonNameComponents?, email: String?) {
-        guard let viewController = self.presentingViewController as? CategoryViewController
-            else { return }
-        
+        print("showCategoryVC")
         DispatchQueue.main.async
         {
+            print("dismiss")
             self.dismiss(animated: true, completion: nil)
         }
     }

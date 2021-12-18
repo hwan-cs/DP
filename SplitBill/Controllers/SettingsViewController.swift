@@ -28,14 +28,8 @@ class SettingsViewController: UIViewController
         titleLabel.numberOfLines = 0
         titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
         madeByLabel.numberOfLines = 0
-        madeByLabel.frame = CGRect(x: 12, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-120, width: UIScreen.main.bounds.width-12, height: 120)
+        madeByLabel.frame = CGRect(x: 8, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-80, width: UIScreen.main.bounds.width-12, height: 120)
         let labelText = NSMutableAttributedString()
-        let titleString = NSAttributedString(string: "Developed By\n\n", attributes: [ .font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: UIColor.black ])
-        let nameString = NSAttributedString(string: "박정환\n", attributes: [ .font: UIFont.systemFont(ofSize: 16, weight: .semibold), .foregroundColor: UIColor.black ])
-        let majorString = NSAttributedString(string: "컴퓨터공학부\n", attributes: [ .font: UIFont.systemFont(ofSize: 14, weight: .regular), .foregroundColor: UIColor.black ])
-        labelText.append(titleString)
-        labelText.append(nameString)
-        labelText.append(majorString)
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = UIImage(systemName: "envelope.circle")?.withTintColor(UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00))
         imageAttachment.image?.withTintColor(.green)
