@@ -37,7 +37,9 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
         return options
     }
     @IBOutlet weak var cellTitleLabel: UILabel!
+    @IBOutlet var cellTitleLabelWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var cellSecondaryTextLabel: UILabel!
+    @IBOutlet var cellSecondaryTextLabelWidthConstraint: NSLayoutConstraint!
 }
 
 class CategoryViewController: SwipeTableViewController
@@ -312,7 +314,9 @@ class CategoryViewController: SwipeTableViewController
     {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MySwipeCell
         cell.delegate = self
-//        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        cell.cellTitleLabelWidthConstraint.constant = (tableView.bounds.width - 16)*0.75
+        cell.cellSecondaryTextLabelWidthConstraint.constant = (tableView.bounds.width - 16)*0.25
+        cell.cellSecondaryTextLabel.adjustsFontSizeToFitWidth = true
         for subview in cell.contentView.subviews
         {
             if subview.layer.shadowOpacity == 0.5
@@ -322,9 +326,9 @@ class CategoryViewController: SwipeTableViewController
         }
         
         var cellView = UIView(frame: CGRect(x: 8, y: 6, width: tableView.bounds.width-16, height: 78))
-        let summaryCellView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 90))
         cellView.layer.cornerRadius = 25
         cellView.layer.borderWidth = 1
+        cell.cellTitleLabel.numberOfLines = 1
         
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         if indexPath.section == 0 && self.paymentArray.count != 0
@@ -335,7 +339,6 @@ class CategoryViewController: SwipeTableViewController
                 cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
                 
-                cell.cellTitleLabel.numberOfLines = 0
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
@@ -344,7 +347,7 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.black.cgColor
                 cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
-                cell.cellTitleLabel.numberOfLines = 0
+ 
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
@@ -356,7 +359,6 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.white.cgColor
                 cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
-                cell.cellTitleLabel.numberOfLines = 0
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
@@ -365,36 +367,9 @@ class CategoryViewController: SwipeTableViewController
                 cellView.layer.shadowColor = UIColor.black.cgColor
                 cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
                 cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
-                cell.cellTitleLabel.numberOfLines = 0
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
-        }
-        else if indexPath.section == 2
-        {
-            cellView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 90))
-            if isDarkOn == true
-            {
-                cellView.layer.shadowColor = UIColor.white.cgColor
-            }
-            else
-            {
-                cellView.layer.shadowColor = UIColor.black.cgColor
-            }
-            cellView.backgroundColor = UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
-            cellView.layer.borderColor = UIColor.black.cgColor
-            cellView.layer.borderWidth = 1
-            var total = 0.0
-            for el in paymentArray
-            {
-                total = total + el.price
-            }
-            for el in participantEventArray
-            {
-                total = total + el.price/Double(el.participants.count)
-            }
-            cell.cellTitleLabel.attributedText = NSAttributedString(string: "\(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
-            cell.cellSecondaryTextLabel.text = ""
         }
         cell.backgroundColor = .clear
         cellView.layer.shadowOpacity = 0.5
@@ -411,6 +386,7 @@ class CategoryViewController: SwipeTableViewController
     {
         return 90
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         if section == 0
@@ -421,7 +397,7 @@ class CategoryViewController: SwipeTableViewController
         {
             return participantEventArray.count
         }
-        return 1
+        return 0
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int
@@ -436,6 +412,16 @@ class CategoryViewController: SwipeTableViewController
         let label = UILabel()
         label.backgroundColor = .clear
         label.frame = CGRect.init(x: 12, y: 5, width: headerView.frame.width-12, height: headerView.frame.height)
+        
+        var total = 0.0
+        for el in paymentArray
+        {
+            total = total + el.price
+        }
+        for el in participantEventArray
+        {
+            total = total + el.price/Double(el.participants.count)
+        }
         if section == 0
         {
             label.attributedText = NSAttributedString(string: "내가 내는 구독권", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
@@ -446,7 +432,7 @@ class CategoryViewController: SwipeTableViewController
         }
         else if section == 2
         {
-            label.attributedText = NSAttributedString(string: "매달 지불 금액", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+            label.attributedText = NSAttributedString(string: "매달 지불 금액: \(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
         }
         if isDarkOn == true
         {

@@ -78,14 +78,20 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="58.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U88-Qx-cHZ">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U88-Qx-cHZ">
                                             <rect key="frame" x="28" y="19" width="42" height="20.666666666666671"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="R2X-5E-nUp"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zVW-AB-0E7">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zVW-AB-0E7">
                                             <rect key="frame" x="352" y="19" width="42" height="20.666666666666671"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="b1L-jf-eFc"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -102,8 +108,10 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="cellSecondaryTextLabel" destination="zVW-AB-0E7" id="Ggx-gL-3tP"/>
+                                    <outlet property="cellSecondaryTextLabel" destination="zVW-AB-0E7" id="KcC-Ve-sx3"/>
+                                    <outlet property="cellSecondaryTextLabelWidthConstraint" destination="b1L-jf-eFc" id="XUj-K4-HLH"/>
                                     <outlet property="cellTitleLabel" destination="U88-Qx-cHZ" id="w6g-wW-FIZ"/>
+                                    <outlet property="cellTitleLabelWidthConstraint" destination="R2X-5E-nUp" id="Xa6-GT-iPH"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
