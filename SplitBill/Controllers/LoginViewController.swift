@@ -35,8 +35,6 @@ class LoginViewController: UIViewController
 
         GIDSignIn.sharedInstance.signIn(with: config, presenting: self)
         { user, error in
-//          guard error == nil else { return }
-//            guard let user = user else { return }
             guard
               let authentication = user?.authentication,
               let idToken = authentication.idToken
@@ -83,20 +81,6 @@ class LoginViewController: UIViewController
     {
         startSignInWithAppleFlow()
     }
-    
-    // - Tag: perform_appleid_password_request
-    /// Prompts the user if an existing iCloud Keychain credential or Apple ID credential is found.
-//    func performExistingAccountSetupFlows() {
-//        // Prepare requests for both Apple ID and password providers.
-//        let requests = [ASAuthorizationAppleIDProvider().createRequest(),
-//                        ASAuthorizationPasswordProvider().createRequest()]
-//
-//        // Create an authorization controller with the given requests.
-//        let authorizationController = ASAuthorizationController(authorizationRequests: requests)
-//        authorizationController.delegate = self
-//        authorizationController.presentationContextProvider = self
-//        authorizationController.performRequests()
-//    }
 }
 
 extension LoginViewController: ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate
@@ -108,10 +92,8 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
     /// - Tag: did_complete_authorization
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)
     {
-        print("authorizationController")
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
         {
-            print("appleidcredential")
               guard let nonce = currentNonce else
               {
                   fatalError("Invalid state: A login callback was received, but no login request was sent.")
@@ -160,8 +142,6 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
                       }
                       self.showCategoryViewController(userIdentifier: appleIDCredential.user, fullName: appleIDCredential.fullName, email: appleIDCredential.email)
                   }
-                  // User is signed in to Firebase with Apple.
-                  // ...
               }
         }
     }
@@ -232,13 +212,13 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
         }
 
     
-//    private func saveUserInKeychain(_ userIdentifier: String) {
-//        do {
-//            try KeychainItem(service: "konkuk.jhpark.SplitBill", account: "userIdentifier").saveItem(userIdentifier)
-//        } catch {
-//            print("Unable to save userIdentifier to keychain.")
-//        }
-//    }
+    private func saveUserInKeychain(_ userIdentifier: String) {
+        do {
+            try KeychainItem(service: "konkuk.jhpark.SplitBill", account: "userIdentifier").saveItem(userIdentifier)
+        } catch {
+            print("Unable to save userIdentifier to keychain.")
+        }
+    }
     
     private func showCategoryViewController(userIdentifier: String, fullName: PersonNameComponents?, email: String?) {
         print("showCategoryVC")

@@ -148,17 +148,13 @@ class DetailViewController: UIViewController
                         let data = doc.data()
                         if (data["email"] as! String) == Auth.auth().currentUser?.email
                         {
-                            DispatchQueue.main.async
-                            {
-                                self.currentUser = data["name"] as! String
-                                completion(self.currentUser)
-                            }
+                            self.currentUser = data["name"] as! String
                         }
                     }
                 }
             }
+            completion(self.currentUser)
         }
-        completion(self.currentUser)
     }
     
     func loadFromInvitation(completion: @escaping (_ success: Bool) -> Void)
@@ -275,6 +271,9 @@ class DetailViewController: UIViewController
     override func viewWillAppear(_ animated: Bool)
     {
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        contentView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        inviteView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
+        view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         let color = isDarkOn ? UIColor.white : UIColor.black
         if event?.eventName == ""
         {
@@ -288,13 +287,21 @@ class DetailViewController: UIViewController
                         let participantsArray = self.event!.participants
                         for (index, people) in participantsArray.enumerated()
                         {
-                            if index != 0
+                            if index == 1
+                            {
+                                tempList.append("\n\(people)\n")
+                            }
+                            else if index > 1 && index != participantsArray.count-1
                             {
                                 tempList.append("\(people)\n")
                             }
+                            else if index > 1 && index == participantsArray.count-1
+                            {
+                                tempList.append("\(people)")
+                            }
                         }
                         let labelText = NSMutableAttributedString()
-                        let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+                        let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
                         let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
                         labelText.append(ownerText)
                         labelText.append(participantText)
@@ -307,27 +314,32 @@ class DetailViewController: UIViewController
         }
         else
         {
-            getCurrentUser { result in
-                print("currentUser: \(self.currentUser)")
-                self.title = self.event!.eventName
-                var tempList = ""
-                let participantsArray = self.event!.participants
-                for (index, people) in participantsArray.enumerated()
+            self.title = self.event!.eventName
+            var tempList = ""
+            let participantsArray = self.event!.participants
+            for (index, people) in participantsArray.enumerated()
+            {
+                if index == 1
                 {
-                    if index != 0
-                    {
-                        tempList.append("\(people)\n")
-                    }
+                    tempList.append("\n\(people)\n")
                 }
-                let labelText = NSMutableAttributedString()
-                let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
-                let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
-                labelText.append(ownerText)
-                labelText.append(participantText)
-                self.listOfParticipants.attributedText = labelText
-                self.didChange = self.event
-                self.initView(self.event!.isOwner)
+                else if index > 1 && index != participantsArray.count-1
+                {
+                    tempList.append("\(people)\n")
+                }
+                else if index > 1 && index == participantsArray.count-1
+                {
+                    tempList.append("\(people)")
+                }
             }
+            let labelText = NSMutableAttributedString()
+            let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+            let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+            labelText.append(ownerText)
+            labelText.append(participantText)
+            self.listOfParticipants.attributedText = labelText
+            self.didChange = self.event
+            self.initView(self.event!.isOwner)
         }
     }
     override func viewWillDisappear(_ animated: Bool)
@@ -409,9 +421,6 @@ class DetailViewController: UIViewController
         {
             view.backgroundColor = isDarkOn ? UIColor.black : UIColor.white
         }
-        contentView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
-        inviteView.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
-        view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         
         var str: String?
         if self.event?.eventDate == "SOM"

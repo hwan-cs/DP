@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 {
 
     var window: UIWindow?
-    var flag: Bool = true
+    var googleSignIn: Bool = true
+    var appleSignIn: Bool = true
     
     override init()
     {
@@ -29,43 +30,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate
         { user, error in
             if error != nil || user == nil
             {
-                DispatchQueue.main.async
-                {
-                    self.flag = false
-                    print(self.flag, self.flag)
-                    self.window?.rootViewController?.showLoginViewController()
-                }
+                self.googleSignIn = false
               // Show the app's signed-out state.
             }
         }
-//        let appleIDProvider = ASAuthorizationAppleIDProvider()
-//        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier)
-//        { (credentialState, error) in
-//            print(KeychainItem.currentUserIdentifier)
-//            switch credentialState
-//            {
-//                case .authorized:
-//                    break // The Apple ID credential is valid.
-//                case .revoked, .notFound:
-//                    // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
-//                    DispatchQueue.main.async
-//                    {
-//                        self.flag = false
-//                    }
-//                default:
-//                    break
-//            }
-//        }
-        if !flag
-        {
-            DispatchQueue.main.async
+        
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier)
+        { (credentialState, error) in
+            print(KeychainItem.currentUserIdentifier)
+            switch credentialState
             {
-                print("dsdsds")
-                self.window?.rootViewController?.showLoginViewController()
+                case .authorized:
+                    print("authorized")
+                    break // The Apple ID credential is valid.
+                case .revoked, .notFound:
+                    print("not found")
+                    // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
+                    DispatchQueue.main.async
+                    {
+                        self.appleSignIn = false
+                    }
+                default:
+                    break
             }
+        }
+        if googleSignIn == false || appleSignIn == false
+        {
+            self.window?.rootViewController?.showLoginViewController()
             return true
         }
-        
         return true
     }
 

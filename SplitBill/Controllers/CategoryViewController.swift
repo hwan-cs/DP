@@ -62,7 +62,7 @@ class CategoryViewController: SwipeTableViewController
         self.navigationController?.navigationBar.topItem?.title = "ㄷㅍ"
         self.tabBarController?.tabBar.items?[0].title = "홈"
     }
-    
+
     override func viewWillAppear(_ animated: Bool)
     {
         print("viewwillappear")
@@ -91,18 +91,20 @@ class CategoryViewController: SwipeTableViewController
         {
             tableView.deselectRow(at: selectedRowNotNill, animated: true)
         }
-        getCurrentUser { result in
-            print("got back \(self.currentUser)")
-            self.view.isUserInteractionEnabled = false
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
-            {
-                self.loadEvents
-                { success in
-                    self.view.isUserInteractionEnabled = true
+        if Auth.auth().currentUser?.email != nil
+        {
+            getCurrentUser { result in
+                print("got back \(self.currentUser)")
+                self.view.isUserInteractionEnabled = false
+                DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
+                {
+                    self.loadEvents
+                    { success in
+                        self.view.isUserInteractionEnabled = true
+                    }
                 }
             }
         }
-        
         tableView.reloadData()
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
@@ -168,6 +170,7 @@ class CategoryViewController: SwipeTableViewController
     }
     func getCurrentUser(completion: @escaping (_ result: String) -> Void)
     {
+        
         currentUser = Auth.auth().currentUser?.email as! String
         db.collection("appleID").whereField("email", isNotEqualTo: false).getDocuments
         { querySnapShot, error in
@@ -184,17 +187,13 @@ class CategoryViewController: SwipeTableViewController
                         let data = doc.data()
                         if (data["email"] as! String) == Auth.auth().currentUser?.email
                         {
-                            DispatchQueue.main.async
-                            {
-                                self.currentUser = data["name"] as! String
-                                completion(self.currentUser)
-                            }
+                            self.currentUser = data["name"] as! String
                         }
                     }
                 }
             }
+            completion(self.currentUser)
         }
-        completion(self.currentUser)
     }
     func loadEvents(completion: @escaping (_ success: Bool) -> Void)
     {
