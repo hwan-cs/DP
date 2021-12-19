@@ -32,29 +32,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate
                 DispatchQueue.main.async
                 {
                     self.flag = false
+                    print(self.flag, self.flag)
                     self.window?.rootViewController?.showLoginViewController()
                 }
               // Show the app's signed-out state.
             }
         }
-        if flag
+//        let appleIDProvider = ASAuthorizationAppleIDProvider()
+//        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier)
+//        { (credentialState, error) in
+//            print(KeychainItem.currentUserIdentifier)
+//            switch credentialState
+//            {
+//                case .authorized:
+//                    break // The Apple ID credential is valid.
+//                case .revoked, .notFound:
+//                    // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
+//                    DispatchQueue.main.async
+//                    {
+//                        self.flag = false
+//                    }
+//                default:
+//                    break
+//            }
+//        }
+        if !flag
         {
+            DispatchQueue.main.async
+            {
+                print("dsdsds")
+                self.window?.rootViewController?.showLoginViewController()
+            }
             return true
         }
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier) { (credentialState, error) in
-            switch credentialState {
-            case .authorized:
-                break // The Apple ID credential is valid.
-            case .revoked, .notFound:
-                // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
-                DispatchQueue.main.async {
-                    self.window?.rootViewController?.showLoginViewController()
-                }
-            default:
-                break
-            }
-        }
+        
         return true
     }
 

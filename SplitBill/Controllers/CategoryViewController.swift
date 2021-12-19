@@ -50,6 +50,7 @@ class CategoryViewController: SwipeTableViewController
 //    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     let db = Firestore.firestore()
     var manager = LocalNotificationManager()
+    var currentUser = ""
     
     override func viewDidLoad()
     {
@@ -65,6 +66,7 @@ class CategoryViewController: SwipeTableViewController
     override func viewWillAppear(_ animated: Bool)
     {
         print("viewwillappear")
+
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         if #available(iOS 13.0, *)
@@ -89,14 +91,18 @@ class CategoryViewController: SwipeTableViewController
         {
             tableView.deselectRow(at: selectedRowNotNill, animated: true)
         }
-        self.view.isUserInteractionEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
-        {
-            self.loadEvents
-            { success in
-                self.view.isUserInteractionEnabled = true
+        getCurrentUser { result in
+            print("got back \(self.currentUser)")
+            self.view.isUserInteractionEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
+            {
+                self.loadEvents
+                { success in
+                    self.view.isUserInteractionEnabled = true
+                }
             }
         }
+        
         tableView.reloadData()
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
@@ -107,7 +113,7 @@ class CategoryViewController: SwipeTableViewController
         
         let action = UIAlertAction(title: "추가", style: .default) { (action) in
             //what will be happening once the user clicks the Add Item button on our UIAlert
-            if  let event = textField.text, let userEmail = Auth.auth().currentUser?.email, let currentTime = Date().timeIntervalSince1970 as? Double
+            if  let event = textField.text, let userEmail = self.currentUser as? String, let currentTime = Date().timeIntervalSince1970 as? Double
             {
                 let ref = self.db.collection("events").document()
                 ref.setData(["dateCreated": currentTime, "eventDate":"", "eventName": event, "owner":userEmail,"participants":[userEmail],"price":0])
@@ -160,6 +166,36 @@ class CategoryViewController: SwipeTableViewController
             self.showLoginViewController()
         }
     }
+    func getCurrentUser(completion: @escaping (_ result: String) -> Void)
+    {
+        currentUser = Auth.auth().currentUser?.email as! String
+        db.collection("appleID").whereField("email", isNotEqualTo: false).getDocuments
+        { querySnapShot, error in
+            if let e = error
+            {
+                print("There was an issue retrieving data from Firestore \(e)")
+            }
+            else
+            {
+                if let snapshotDocuments = querySnapShot?.documents
+                {
+                    for doc in snapshotDocuments
+                    {
+                        let data = doc.data()
+                        if (data["email"] as! String) == Auth.auth().currentUser?.email
+                        {
+                            DispatchQueue.main.async
+                            {
+                                self.currentUser = data["name"] as! String
+                                completion(self.currentUser)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        completion(self.currentUser)
+    }
     func loadEvents(completion: @escaping (_ success: Bool) -> Void)
     {
         //date formatter
@@ -184,8 +220,10 @@ class CategoryViewController: SwipeTableViewController
             completion(true)
             return
         }
+            
+        print("currentuser: ", currentUser)
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
-        { querySnapShot, error in
+        { [self] querySnapShot, error in
             self.paymentArray = []
             self.participantEventArray = []
             self.manager.notifications.removeAll()
@@ -200,13 +238,13 @@ class CategoryViewController: SwipeTableViewController
                     for doc in snapshotDocuments
                     {
                         let data = doc.data()
-                        if (data["participants"] as! [String]).contains(Auth.auth().currentUser?.email ?? "nil")
+                        if (data["participants"] as! [String]).contains(self.currentUser ?? "nil")
                         {
                             if let eventName = data["eventName"] as? String, let price = data["price"] as? Double, let participants = data["participants"] as? [String]
                                 , let owner = data["owner"] as? String, let eventDate = data["eventDate"] as? String, let dateCreated = data["dateCreated"] as? Double
                                 , let FIRDocID = doc.documentID as? String
                             {
-                                let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
+                                let newEvent = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == self.currentUser)
                                 if newEvent.isOwner == true
                                 {
                                     self.paymentArray.append(newEvent)
@@ -230,7 +268,7 @@ class CategoryViewController: SwipeTableViewController
 
                                     let SDMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
                                     
-                                    if owner == Auth.auth().currentUser?.email
+                                    if owner == self.currentUser
                                     {
                                         if eventDate == "SOM"
                                         {

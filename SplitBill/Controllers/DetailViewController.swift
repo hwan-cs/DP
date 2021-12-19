@@ -50,6 +50,8 @@ class DetailViewController: UIViewController
     var saveButtonView = UIView()
     var saveButton = UIButton()
     
+    var currentUser = ""
+    
     lazy private var shareController: UIActivityViewController =
     {
       let activities: [Any] = [
@@ -128,9 +130,40 @@ class DetailViewController: UIViewController
             dateTextField.placeholder = item
         }
     }
+    func getCurrentUser(completion: @escaping (_ result: String) -> Void)
+    {
+        currentUser = Auth.auth().currentUser?.email as! String
+        db.collection("appleID").whereField("email", isNotEqualTo: false).getDocuments
+        { querySnapShot, error in
+            if let e = error
+            {
+                print("There was an issue retrieving data from Firestore \(e)")
+            }
+            else
+            {
+                if let snapshotDocuments = querySnapShot?.documents
+                {
+                    for doc in snapshotDocuments
+                    {
+                        let data = doc.data()
+                        if (data["email"] as! String) == Auth.auth().currentUser?.email
+                        {
+                            DispatchQueue.main.async
+                            {
+                                self.currentUser = data["name"] as! String
+                                completion(self.currentUser)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        completion(self.currentUser)
+    }
     
     func loadFromInvitation(completion: @escaping (_ success: Bool) -> Void)
     {
+        print("loadfrominvitation")
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments { querySnapshot, err in
             if let err = err
             {
@@ -147,12 +180,12 @@ class DetailViewController: UIViewController
                             , let owner = data["owner"] as? String, let eventDate = data["eventDate"] as? String, let dateCreated = data["dateCreated"] as? Double
                             , let FIRDocID = self.event?.FIRDocID as? String
                         {
-                            if !participants.contains(Auth.auth().currentUser?.email! ?? "")
+                            if !participants.contains(self.currentUser)
                             {
-                                participants.append(Auth.auth().currentUser?.email! ?? "")
+                                participants.append(self.currentUser)
                                 doc.reference.updateData(["participants" : participants])
                             }
-                            self.event = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == Auth.auth().currentUser?.email)
+                            self.event = PaymentEvent(FIRDocID: FIRDocID, eventName: eventName, dateCreated: dateCreated, participants: participants, price: price, eventDate: eventDate, isOwner: owner == self.currentUser)
                             print(self.event)
                             PaymentEvent.didChange = true
                             completion(true)
@@ -169,7 +202,7 @@ class DetailViewController: UIViewController
         
         let action = UIAlertAction(title: "예", style: .default)
         { (action) in
-            self.db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
+            self.db.collection("events").whereField("owner", isEqualTo: self.currentUser).getDocuments
             { querySnapshot, err in
                 if let err = err
                 {
@@ -245,50 +278,56 @@ class DetailViewController: UIViewController
         let color = isDarkOn ? UIColor.white : UIColor.black
         if event?.eventName == ""
         {
-            loadFromInvitation { success in
-                if success
-                {
-                    self.title = self.event!.eventName
-                    var tempList = ""
-                    let participantsArray = self.event!.participants
-                    for (index, people) in participantsArray.enumerated()
+            getCurrentUser { result in
+                print("currentUser: \(self.currentUser)")
+                self.loadFromInvitation { success in
+                    if success
                     {
-                        if index != 0
+                        self.title = self.event!.eventName
+                        var tempList = ""
+                        let participantsArray = self.event!.participants
+                        for (index, people) in participantsArray.enumerated()
                         {
-                            tempList.append("\(people)\n")
+                            if index != 0
+                            {
+                                tempList.append("\(people)\n")
+                            }
                         }
+                        let labelText = NSMutableAttributedString()
+                        let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+                        let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+                        labelText.append(ownerText)
+                        labelText.append(participantText)
+                        self.listOfParticipants.attributedText = labelText
+                        self.didChange = self.event
+                        self.initView(self.event!.isOwner)
                     }
-                    let labelText = NSMutableAttributedString()
-                    let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
-                    let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
-                    labelText.append(ownerText)
-                    labelText.append(participantText)
-                    self.listOfParticipants.attributedText = labelText
-                    self.didChange = self.event
-                    self.initView(self.event!.isOwner)
                 }
             }
         }
         else
         {
-            self.title = self.event!.eventName
-            var tempList = ""
-            let participantsArray = self.event!.participants
-            for (index, people) in participantsArray.enumerated()
-            {
-                if index != 0
+            getCurrentUser { result in
+                print("currentUser: \(self.currentUser)")
+                self.title = self.event!.eventName
+                var tempList = ""
+                let participantsArray = self.event!.participants
+                for (index, people) in participantsArray.enumerated()
                 {
-                    tempList.append("\(people)\n")
+                    if index != 0
+                    {
+                        tempList.append("\(people)\n")
+                    }
                 }
+                let labelText = NSMutableAttributedString()
+                let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+                let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+                labelText.append(ownerText)
+                labelText.append(participantText)
+                self.listOfParticipants.attributedText = labelText
+                self.didChange = self.event
+                self.initView(self.event!.isOwner)
             }
-            let labelText = NSMutableAttributedString()
-            let ownerText = NSAttributedString(string: "\(self.event!.participants[0])\n", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
-            let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
-            labelText.append(ownerText)
-            labelText.append(participantText)
-            self.listOfParticipants.attributedText = labelText
-            self.didChange = self.event
-            self.initView(self.event!.isOwner)
         }
     }
     override func viewWillDisappear(_ animated: Bool)
@@ -314,7 +353,7 @@ class DetailViewController: UIViewController
         {
             PaymentEvent.didChange = true
         }
-        db.collection("events").whereField("owner", isEqualTo: Auth.auth().currentUser?.email).getDocuments
+        db.collection("events").whereField("owner", isEqualTo: currentUser).getDocuments
         { querySnapshot, err in
             if let err = err
             {
