@@ -195,7 +195,6 @@ class DetailViewController: UIViewController
     @objc func saveButtonPressed(_ sender: UIButton)
     {
         let alert = UIAlertController(title: "저장하시겠습니까?", message: "한번 저장하면 다시 날짜를 바꿀 수 없습니다.", preferredStyle: .alert)
-        
         let action = UIAlertAction(title: "예", style: .default)
         { (action) in
             self.db.collection("events").whereField("owner", isEqualTo: self.currentUser).getDocuments
@@ -314,6 +313,7 @@ class DetailViewController: UIViewController
         }
         else
         {
+            self.currentUser = self.event?.participants[0] as! String
             self.title = self.event!.eventName
             var tempList = ""
             let participantsArray = self.event!.participants

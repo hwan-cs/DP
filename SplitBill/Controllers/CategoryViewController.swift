@@ -51,6 +51,7 @@ class CategoryViewController: SwipeTableViewController
     let db = Firestore.firestore()
     var manager = LocalNotificationManager()
     var currentUser = ""
+    var didInit = false
     
     override func viewDidLoad()
     {
@@ -66,7 +67,6 @@ class CategoryViewController: SwipeTableViewController
     override func viewWillAppear(_ animated: Bool)
     {
         print("viewwillappear")
-
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         if #available(iOS 13.0, *)
@@ -101,11 +101,29 @@ class CategoryViewController: SwipeTableViewController
                     self.loadEvents
                     { success in
                         self.view.isUserInteractionEnabled = true
+                        if self.didInit == true
+                        {
+                            self.showAlert()
+                        }
+                        self.didInit = true
                     }
                 }
             }
         }
         tableView.reloadData()
+    }
+    func showAlert()
+    {
+        let alert = UIAlertController(title: "저장 완료!", message: "", preferredStyle: .alert)
+        let imageView = UIImageView(frame: CGRect(x: 30, y: 50, width: 55, height: 50))
+        imageView.image = UIImage(systemName: "checkmark.circle.fill")
+        alert.view.addSubview(imageView)
+        let height = NSLayoutConstraint(item: alert.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 120)
+        let width = NSLayoutConstraint(item: alert.view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 120)
+        alert.view.addConstraint(height)
+        alert.view.addConstraint(width)
+        self.present(alert, animated: true, completion: nil)
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in alert.dismiss(animated: true, completion: nil)} )
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
     {
@@ -170,7 +188,6 @@ class CategoryViewController: SwipeTableViewController
     }
     func getCurrentUser(completion: @escaping (_ result: String) -> Void)
     {
-        
         currentUser = Auth.auth().currentUser?.email as! String
         db.collection("appleID").whereField("email", isNotEqualTo: false).getDocuments
         { querySnapShot, error in
@@ -220,7 +237,6 @@ class CategoryViewController: SwipeTableViewController
             return
         }
             
-        print("currentuser: ", currentUser)
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments
         { [self] querySnapShot, error in
             self.paymentArray = []
@@ -255,72 +271,98 @@ class CategoryViewController: SwipeTableViewController
                                 
                                 if Notification.pushNotificationOn == true
                                 {
-                                    let SOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+                                    let SOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+                                    
+                                    let SOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 18, minute: 0))
+                                    
+                                    let EOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
 
-                                    let EOMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
+                                    let EOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 18, minute: 0))
+                                    
+                                    let SDMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
 
-                                    let SDMNotificationOwner = Notification(id: FIRDocID, title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+                                    let SDMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 18, minute: 0))
+                                    
+                                    let SOMNotificationParticipants12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
 
-                                    let SOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+                                    let SOMNotificationParticipants6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 18, minute: 0))
+                                    
+                                    let EOMNotificationParticipants12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
 
-                                    let EOMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
-
-                                    let SDMNotificationParticipants = Notification(id: FIRDocID, title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+                                    let EOMNotificationParticipants6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 18, minute: 0))
+                                    
+                                    let SDMNotificationParticipants12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+                                    
+                                    let SDMNotificationParticipants6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 18, minute: 0))
                                     
                                     if owner == self.currentUser
                                     {
                                         if eventDate == "SOM"
                                         {
-                                            self.manager.notifications.append(SOMNotificationOwner)
+                                            self.manager.notifications.append(SOMNotificationOwner12PM)
+                                            self.manager.notifications.append(SOMNotificationOwner6PM)
                                         }
-                                        else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
+                                        else if eventDate == "EOM"
                                         {
-                                            if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
-                                            {
-                                                self.manager.notifications = [EOMNotificationOwner]
-                                            }
-                                            else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
-                                            {
-                                                var foo = EOMNotificationOwner
-                                                foo.datetime.day =  foo.datetime.day!-1
-                                                self.manager.notifications.append(foo)
-                                            }
-                                            else
-                                            {
-                                                self.manager.notifications.append(EOMNotificationOwner)
-                                            }
+                                            self.manager.notifications.append(EOMNotificationOwner12PM)
+                                            self.manager.notifications.append(EOMNotificationOwner6PM)
                                         }
                                         else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                         {
-                                            self.manager.notifications.append(SDMNotificationOwner)
+                                            if (Int(eventDate) ?? 1) == (Int(dateFormatter.string(from: endOfMonth!)) ?? 1)
+                                            {
+                                                self.manager.notifications.append(EOMNotificationOwner12PM)
+                                                self.manager.notifications.append(EOMNotificationOwner6PM)
+                                            }
+                                            else if (Int(eventDate) ?? 1) == (Int(dateFormatter.string(from: endOfMonth!)) ?? 1)-1
+                                            {
+                                                var foo = EOMNotificationOwner12PM
+                                                foo.datetime.day = foo.datetime.day!-1
+                                                self.manager.notifications.append(foo)
+                                                var bar = EOMNotificationOwner6PM
+                                                bar.datetime.day = bar.datetime.day!-1
+                                                self.manager.notifications.append(bar)
+                                            }
+                                            else
+                                            {
+                                                self.manager.notifications.append(SDMNotificationOwner12PM)
+                                                self.manager.notifications.append(SDMNotificationOwner6PM)
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         if eventDate == "SOM"
                                         {
-                                            self.manager.notifications.append(SOMNotificationParticipants)
+                                            self.manager.notifications.append(SOMNotificationParticipants12PM)
+                                            self.manager.notifications.append(SOMNotificationParticipants6PM)
                                         }
-                                        else if eventDate == "EOM" || eventDate == "30" || eventDate == "31"
+                                        else if eventDate == "EOM"
                                         {
-                                            if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "30"
-                                            {
-                                                self.manager.notifications.append(EOMNotificationParticipants)
-                                            }
-                                            else if eventDate == "30" && dateFormatter.string(from: endOfMonth!) == "31"
-                                            {
-                                                var foo = EOMNotificationParticipants
-                                                foo.datetime.day = foo.datetime.day!-1
-                                                self.manager.notifications.append(foo)
-                                            }
-                                            else
-                                            {
-                                                self.manager.notifications.append(EOMNotificationParticipants)
-                                            }
+                                            self.manager.notifications.append(EOMNotificationParticipants12PM)
+                                            self.manager.notifications.append(EOMNotificationParticipants6PM)
                                         }
                                         else if eventDate != "EOM" && eventDate != "SOM" && eventDate != ""
                                         {
-                                            self.manager.notifications.append(SDMNotificationParticipants)
+                                            if (Int(eventDate) ?? 1) == (Int(dateFormatter.string(from: endOfMonth!)) ?? 1)
+                                            {
+                                                self.manager.notifications.append(EOMNotificationParticipants12PM)
+                                                self.manager.notifications.append(EOMNotificationParticipants6PM)
+                                            }
+                                            else if (Int(eventDate) ?? 1) == (Int(dateFormatter.string(from: endOfMonth!)) ?? 1)-1
+                                            {
+                                                var foo = EOMNotificationParticipants12PM
+                                                foo.datetime.day = foo.datetime.day!-1
+                                                self.manager.notifications.append(foo)
+                                                var bar = EOMNotificationParticipants6PM
+                                                bar.datetime.day = bar.datetime.day!-1
+                                                self.manager.notifications.append(bar)
+                                            }
+                                            else
+                                            {
+                                                self.manager.notifications.append(SDMNotificationParticipants12PM)
+                                                self.manager.notifications.append(SDMNotificationParticipants6PM)
+                                            }
                                         }
                                     }
                                     PaymentEvent.didChange = false
@@ -368,23 +410,28 @@ class CategoryViewController: SwipeTableViewController
         cell.cellTitleLabel.numberOfLines = 1
         
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        
+        if isDarkOn == true
+        {
+            cellView.layer.shadowColor = UIColor.white.cgColor
+            cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
+            cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
+        }
+        else
+        {
+            cellView.layer.shadowColor = UIColor.black.cgColor
+            cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
+            cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
+        }
         if indexPath.section == 0 && self.paymentArray.count != 0
         {
             if isDarkOn == true
             {
-                cellView.layer.shadowColor = UIColor.white.cgColor
-                cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
-                
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
             else
             {
-                cellView.layer.shadowColor = UIColor.black.cgColor
-                cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
- 
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
@@ -393,17 +440,11 @@ class CategoryViewController: SwipeTableViewController
         {
             if isDarkOn == true
             {
-                cellView.layer.shadowColor = UIColor.white.cgColor
-                cellView.backgroundColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00).cgColor
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
             }
             else
             {
-                cellView.layer.shadowColor = UIColor.black.cgColor
-                cellView.backgroundColor = UIColor(red: 0.85, green: 0.91, blue: 0.66, alpha: 1.00)
-                cellView.layer.borderColor = UIColor(red: 0.12, green: 0.32, blue: 0.16, alpha: 1.00).cgColor
                 cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
                 cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
             }
@@ -412,7 +453,9 @@ class CategoryViewController: SwipeTableViewController
         cellView.layer.shadowOpacity = 0.5
         cellView.layer.shadowOffset = .zero
         cellView.layer.shadowRadius = 3.5
-        cellView.layer.masksToBounds = false
+        cellView.layer.shadowPath = UIBezierPath(roundedRect: cellView.bounds, cornerRadius: cellView.layer.cornerRadius).cgPath
+//        cellView.layer.shouldRasterize = true
+//        cellView.layer.masksToBounds = false
         
         cell.contentView.addSubview(cellView)
         cell.contentView.sendSubviewToBack(cellView)
@@ -469,7 +512,7 @@ class CategoryViewController: SwipeTableViewController
         }
         else if section == 2
         {
-            label.attributedText = NSAttributedString(string: "매달 지불 금액: \(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+            label.attributedText = NSAttributedString(string: "구독권 지출 금액: \(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
         }
         if isDarkOn == true
         {

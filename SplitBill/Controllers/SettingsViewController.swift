@@ -100,12 +100,14 @@ class SettingsViewController: UIViewController
         NVshadowView.layer.shadowOpacity = 0.2
         NVshadowView.layer.shadowOffset = .zero
         NVshadowView.layer.shadowRadius = 5
-
+        NVshadowView.layer.shadowPath = UIBezierPath(roundedRect: NVshadowView.bounds, cornerRadius: NVshadowView.layer.cornerRadius).cgPath
+        
         DMshadowView.layer.cornerRadius = 25
         DMshadowView.layer.borderWidth = 1
         DMshadowView.layer.shadowOpacity = 0.2
         DMshadowView.layer.shadowOffset = .zero
         DMshadowView.layer.shadowRadius = 5
+        DMshadowView.layer.shadowPath = UIBezierPath(roundedRect: DMshadowView.bounds, cornerRadius: DMshadowView.layer.cornerRadius).cgPath
         
         pushNotificationsView.addSubview(NVshadowView)
         pushNotificationsView.sendSubviewToBack(NVshadowView)

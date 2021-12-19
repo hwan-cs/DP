@@ -42,10 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate
             switch credentialState
             {
                 case .authorized:
-                    print("authorized")
                     break // The Apple ID credential is valid.
                 case .revoked, .notFound:
-                    print("not found")
                     // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
                     DispatchQueue.main.async
                     {
