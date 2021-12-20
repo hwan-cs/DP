@@ -64,7 +64,7 @@ class CategoryViewController: SwipeTableViewController
         self.tabBarController?.tabBar.items?[0].title = "홈"
     }
 
-    override func viewWillAppear(_ animated: Bool)
+    override func viewDidAppear(_ animated: Bool)
     {
         print("viewwillappear")
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
@@ -98,10 +98,11 @@ class CategoryViewController: SwipeTableViewController
                 self.view.isUserInteractionEnabled = false
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
                 {
+                    let flag = PaymentEvent.didChange
                     self.loadEvents
                     { success in
                         self.view.isUserInteractionEnabled = true
-                        if self.didInit == true
+                        if self.didInit == true && flag == true
                         {
                             self.showAlert()
                         }
@@ -115,7 +116,7 @@ class CategoryViewController: SwipeTableViewController
     func showAlert()
     {
         let alert = UIAlertController(title: "저장 완료!", message: "", preferredStyle: .alert)
-        let imageView = UIImageView(frame: CGRect(x: 30, y: 50, width: 55, height: 50))
+        let imageView = UIImageView(frame: CGRect(x: 35, y: 50, width: 50, height: 50))
         imageView.image = UIImage(systemName: "checkmark.circle.fill")
         alert.view.addSubview(imageView)
         let height = NSLayoutConstraint(item: alert.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 120)
@@ -123,7 +124,7 @@ class CategoryViewController: SwipeTableViewController
         alert.view.addConstraint(height)
         alert.view.addConstraint(width)
         self.present(alert, animated: true, completion: nil)
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { _ in alert.dismiss(animated: true, completion: nil)} )
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in alert.dismiss(animated: true, completion: nil)} )
     }
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
     {
@@ -396,6 +397,7 @@ class CategoryViewController: SwipeTableViewController
         cell.cellTitleLabelWidthConstraint.constant = (tableView.bounds.width - 16)*0.75
         cell.cellSecondaryTextLabelWidthConstraint.constant = (tableView.bounds.width - 16)*0.25
         cell.cellSecondaryTextLabel.adjustsFontSizeToFitWidth = true
+        cell.cellTitleLabel.adjustsFontSizeToFitWidth = true
         for subview in cell.contentView.subviews
         {
             if subview.layer.shadowOpacity == 0.5
@@ -407,7 +409,7 @@ class CategoryViewController: SwipeTableViewController
         var cellView = UIView(frame: CGRect(x: 8, y: 6, width: tableView.bounds.width-16, height: 78))
         cellView.layer.cornerRadius = 25
         cellView.layer.borderWidth = 1
-        cell.cellTitleLabel.numberOfLines = 1
+        cell.cellTitleLabel.numberOfLines = 2
         
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         
