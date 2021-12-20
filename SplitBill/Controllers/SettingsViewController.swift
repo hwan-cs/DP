@@ -26,7 +26,7 @@ class SettingsViewController: UIViewController
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
         titleLabel.numberOfLines = 0
-        titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont.systemFont(ofSize: 40, weight: .bold), .foregroundColor: UIColor.white ])
+        titleLabel.attributedText = NSAttributedString(string: "설정", attributes: [ .font: UIFont(name: "KaturiOTF", size: 40)!, .foregroundColor: UIColor.white ])
         madeByLabel.numberOfLines = 0
         madeByLabel.frame = CGRect(x: 8, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-80, width: UIScreen.main.bounds.width-12, height: 120)
         let labelText = NSMutableAttributedString()
@@ -36,7 +36,7 @@ class SettingsViewController: UIViewController
         imageAttachment.bounds = CGRect(x: 0, y: -10.0, width: imageAttachment.image!.size.width+10, height: imageAttachment.image!.size.height+10)
         let attachmentString = NSAttributedString(attachment: imageAttachment)
         labelText.append(attachmentString)
-        let textAfterIcon = NSAttributedString(string: "hwan333@konkuk.ac.kr", attributes: [ .font: UIFont.systemFont(ofSize: 16, weight: .semibold), .foregroundColor: UIColor.black ])
+        let textAfterIcon = NSAttributedString(string: "hwan333@konkuk.ac.kr", attributes: [ .font: UIFont(name: "KaturiOTF", size: 16)!, .foregroundColor: UIColor.black ])
         labelText.append(textAfterIcon)
         madeByLabel.attributedText = labelText
         view.addSubview(madeByLabel)
@@ -46,8 +46,8 @@ class SettingsViewController: UIViewController
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         let isPNOn = UserDefaults.standard.bool(forKey: "prefs_is_push_notification_on")
         initView(isDarkOn, isPNOn)
-        darkModeLabel.attributedText = NSAttributedString(string: "다크 모드", attributes: [ .font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: UIColor.black ])
-        pushNotificationsLabel.attributedText = NSAttributedString(string: "알림 허용", attributes: [ .font: UIFont.systemFont(ofSize: 18, weight: .medium), .foregroundColor: UIColor.black ])
+        darkModeLabel.attributedText = NSAttributedString(string: "다크 모드", attributes: [ .font: UIFont(name: "KaturiOTF", size: 18)!, .foregroundColor: UIColor.black ])
+        pushNotificationsLabel.attributedText = NSAttributedString(string: "알림 허용", attributes: [ .font: UIFont(name: "KaturiOTF", size: 18)!, .foregroundColor: UIColor.black ])
     }
     func initView(_ isDarkOn: Bool, _ isPushNotificationOn: Bool)
     {
@@ -116,6 +116,7 @@ class SettingsViewController: UIViewController
     }
     @IBAction func pushNotificationSwitchDidChange(_ sender: UISwitch)
     {
+        PaymentEvent.didChange = true
         UserDefaults.standard.set(sender.isOn, forKey: "prefs_is_push_notification_on")
         if sender.isOn == false
         {
@@ -123,7 +124,6 @@ class SettingsViewController: UIViewController
         }
         else
         {
-            PaymentEvent.didChange = true
             Notification.pushNotificationOn = true
         }
         if let tabbarC = self.tabBarController

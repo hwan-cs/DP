@@ -63,6 +63,9 @@ class DetailViewController: UIViewController
       return controller
     }()
     
+    let KaturiMedium:UIFont = UIFont(name: "KaturiOTF", size: 20)!
+    let KaturiLarge: UIFont = UIFont(name: "KaturiOTF", size: 24)!
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -300,8 +303,8 @@ class DetailViewController: UIViewController
                             }
                         }
                         let labelText = NSMutableAttributedString()
-                        let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
-                        let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+                        let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: self.KaturiMedium, .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+                        let participantText = NSAttributedString(string: tempList, attributes: [ .font: self.KaturiMedium, .foregroundColor: color ])
                         labelText.append(ownerText)
                         labelText.append(participantText)
                         self.listOfParticipants.attributedText = labelText
@@ -333,8 +336,8 @@ class DetailViewController: UIViewController
                 }
             }
             let labelText = NSMutableAttributedString()
-            let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
-            let participantText = NSAttributedString(string: tempList, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .medium), .foregroundColor: color ])
+            let ownerText = NSAttributedString(string: "\(self.event!.participants[0])", attributes: [ .font: self.KaturiMedium, .foregroundColor: UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00) ])
+            let participantText = NSAttributedString(string: tempList, attributes: [ .font: self.KaturiMedium, .foregroundColor: color ])
             labelText.append(ownerText)
             labelText.append(participantText)
             self.listOfParticipants.attributedText = labelText
@@ -403,8 +406,8 @@ class DetailViewController: UIViewController
             saveButtonView.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
             saveButtonView.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
             saveButton.frame = CGRect(x: 0, y: UIScreen.main.bounds.height-(self.tabBarController?.tabBar.frame.size.height)!-10, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.size.height)!)
-            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ]), for: .normal)
-            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.blue ]), for: .selected)
+            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: self.KaturiMedium, .foregroundColor: UIColor.black ]), for: .normal)
+            saveButton.setAttributedTitle( NSAttributedString(string: "저장하기", attributes: [ .font: self.KaturiMedium, .foregroundColor: UIColor.blue ]), for: .selected)
             saveButton.addTarget(self, action: #selector(saveButtonPressed(_:)), for: .touchUpInside)
             
             self.tabBarController?.view.addSubview(saveButtonView)

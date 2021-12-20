@@ -53,6 +53,9 @@ class CategoryViewController: SwipeTableViewController
     var currentUser = ""
     var didInit = false
     
+    let KaturiMedium:UIFont = UIFont(name: "KaturiOTF", size: 20)!
+    let KaturiLarge: UIFont = UIFont(name: "KaturiOTF", size: 24)!
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -62,11 +65,7 @@ class CategoryViewController: SwipeTableViewController
         tableView.separatorStyle = .none
         self.navigationController?.navigationBar.topItem?.title = "ㄷㅍ"
         self.tabBarController?.tabBar.items?[0].title = "홈"
-    }
-
-    override func viewDidAppear(_ animated: Bool)
-    {
-        print("viewwillappear")
+        
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
         if #available(iOS 13.0, *)
@@ -74,10 +73,10 @@ class CategoryViewController: SwipeTableViewController
             let appearance = UINavigationBarAppearance()
             appearance.configureWithDefaultBackground()
             appearance.backgroundColor = UIColor(red: 0.31, green: 0.62, blue: 0.24, alpha: 1.00)
-            appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
-            appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white]
-            self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
-            self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
+            appearance.titleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont(name: "KaturiOTF", size: 12)!]
+            appearance.largeTitleTextAttributes =  [NSAttributedString.Key.foregroundColor: UIColor.white, .font: KaturiLarge]
+            self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont(name: "KaturiOTF", size: 14)!], for: .normal)
+            self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont(name: "KaturiOTF", size: 14)!], for: .normal)
             self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
             navigationController?.navigationBar.standardAppearance = appearance
             navigationController?.navigationBar.scrollEdgeAppearance = appearance
@@ -86,6 +85,11 @@ class CategoryViewController: SwipeTableViewController
         {
            navigationController?.navigationBar.barTintColor = .systemGreen
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool)
+    {
+        print("viewDidAppear")
         let selectedRow: IndexPath? = tableView.indexPathForSelectedRow
         if let selectedRowNotNill = selectedRow
         {
@@ -112,6 +116,11 @@ class CategoryViewController: SwipeTableViewController
             }
         }
         tableView.reloadData()
+    }
+    override func viewWillAppear(_ animated: Bool)
+    {
+        let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
+        view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
     }
     func showAlert()
     {
@@ -231,7 +240,6 @@ class CategoryViewController: SwipeTableViewController
         EOM.day = -1
         let endOfMonth = Calendar.current.date(byAdding: EOM, to: startOfMonth)
         print(dateFormatter.string(from: endOfMonth!))
-        print(PaymentEvent.didChange)
         if PaymentEvent.didChange == false && Notification.pushNotificationOn == true
         {
             completion(true)
@@ -272,17 +280,17 @@ class CategoryViewController: SwipeTableViewController
                                 
                                 if Notification.pushNotificationOn == true
                                 {
-                                    let SOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
+                                    let SOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
                                     
-                                    let SOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 18, minute: 0))
+                                    let SOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 18, minute: 0))
                                     
-                                    let EOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
+                                    let EOMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 12, minute: 0))
 
-                                    let EOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 18, minute: 0))
+                                    let EOMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: endOfMonth!)), hour: 18, minute: 0))
                                     
-                                    let SDMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
+                                    let SDMNotificationOwner12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 12, minute: 0))
 
-                                    let SDMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price))원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 18, minute: 0))
+                                    let SDMNotificationOwner6PM = Notification(id: "\(FIRDocID) - 6PM", title: "DP 정산 알림", body: "오늘 \(eventName) 구독권으로 \(Int(price).withCommas())원이 지불됩니다!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(eventDate), hour: 18, minute: 0))
                                     
                                     let SOMNotificationParticipants12PM = Notification(id: "\(FIRDocID) - 12PM", title: "DP 정산 알림", body: "\(eventName) 구독권 정산날이에요!🙂 \(owner)님에게 \(Int(price/Double(participants.count)))원을 보내주세요!", datetime: DateComponents(calendar: Calendar.current, year: Calendar.current.component(.year, from: Date()), month: Calendar.current.component(.month, from: Date()), day: Int(dateFormatter.string(from: startOfMonth)), hour: 12, minute: 0))
 
@@ -366,8 +374,8 @@ class CategoryViewController: SwipeTableViewController
                                             }
                                         }
                                     }
-                                    PaymentEvent.didChange = false
                                 }
+                                PaymentEvent.didChange = false
                             }
                         }
                     }
@@ -429,26 +437,26 @@ class CategoryViewController: SwipeTableViewController
         {
             if isDarkOn == true
             {
-                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
-                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.white ])
+                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(Int(self.paymentArray[indexPath.row].price).withCommas())원", attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.white ])
             }
             else
             {
-                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
-                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.paymentArray[indexPath.row].price)))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.paymentArray[indexPath.row].eventName, attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.black ])
+                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(Int(self.paymentArray[indexPath.row].price).withCommas())원", attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.black ])
             }
         }
         else if indexPath.section == 1 && self.participantEventArray.count != 0
         {
             if isDarkOn == true
             {
-                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
-                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.white ])
+                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.white ])
+                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count)).withCommas())원", attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.white ])
             }
             else
             {
-                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
-                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(String(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count))))원", attributes: [ .font: UIFont.systemFont(ofSize: 20, weight: .bold), .foregroundColor: UIColor.black ])
+                cell.cellTitleLabel.attributedText = NSAttributedString(string: self.participantEventArray[indexPath.row].eventName, attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.black ])
+                cell.cellSecondaryTextLabel.attributedText = NSAttributedString(string: "\(Int(self.participantEventArray[indexPath.row].price/Double(self.participantEventArray[indexPath.row].participants.count)).withCommas())원", attributes: [ .font: KaturiMedium, .foregroundColor: UIColor.black ])
             }
         }
         cell.backgroundColor = .clear
@@ -456,8 +464,6 @@ class CategoryViewController: SwipeTableViewController
         cellView.layer.shadowOffset = .zero
         cellView.layer.shadowRadius = 3.5
         cellView.layer.shadowPath = UIBezierPath(roundedRect: cellView.bounds, cornerRadius: cellView.layer.cornerRadius).cgPath
-//        cellView.layer.shouldRasterize = true
-//        cellView.layer.masksToBounds = false
         
         cell.contentView.addSubview(cellView)
         cell.contentView.sendSubviewToBack(cellView)
@@ -506,15 +512,15 @@ class CategoryViewController: SwipeTableViewController
         }
         if section == 0
         {
-            label.attributedText = NSAttributedString(string: "내가 내는 구독권", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+            label.attributedText = NSAttributedString(string: "내가 내는 구독권", attributes: [ .font: KaturiLarge, .foregroundColor: UIColor.black ])
         }
         else if section == 1
         {
-            label.attributedText = NSAttributedString(string: "보내야 하는 구독권", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+            label.attributedText = NSAttributedString(string: "보내야 하는 구독권", attributes: [ .font: KaturiLarge, .foregroundColor: UIColor.black ])
         }
         else if section == 2
         {
-            label.attributedText = NSAttributedString(string: "구독권 지출 금액: \(String(Int(total)))원", attributes: [ .font: UIFont.systemFont(ofSize: 24, weight: .bold), .foregroundColor: UIColor.black ])
+            label.attributedText = NSAttributedString(string: "구독권 지출 금액: \(Int(total).withCommas())원", attributes: [ .font: KaturiLarge, .foregroundColor: UIColor.black ])
         }
         if isDarkOn == true
         {
@@ -580,7 +586,6 @@ class CategoryViewController: SwipeTableViewController
             }
             for (index, element) in self.manager.notifications.enumerated()
             {
-                print(index)
                 if self.manager.notifications[index].id == paymentArray[indexPath.row].FIRDocID
                 {
                     self.manager.notifications.remove(at: index)
@@ -616,4 +621,12 @@ class CategoryViewController: SwipeTableViewController
         }
     }
 }
-
+extension Int
+{
+    func withCommas() -> String
+    {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        return numberFormatter.string(from: NSNumber(value:self))!
+    }
+}

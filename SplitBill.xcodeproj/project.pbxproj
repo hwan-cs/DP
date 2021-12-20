@@ -20,6 +20,7 @@
 		1A8B54F82732DBCA00B6A212 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8B54F72732DBCA00B6A212 /* DetailViewController.swift */; };
 		1A9AEF622709A7D300DA0F35 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9AEF612709A7D300DA0F35 /* CategoryViewController.swift */; };
 		1A9AEF642709A84C00DA0F35 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9AEF632709A84C00DA0F35 /* SwipeTableViewController.swift */; };
+		1AC229AA2770F7E100CB550D /* Katuri.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1AC229A92770F7E100CB550D /* Katuri.otf */; };
 		1AE13F1B2744062700633B7C /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE13F1A2744062700633B7C /* LocalNotificationManager.swift */; };
 		1AE8211E26F9DD4B0053A3C2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8211D26F9DD4B0053A3C2 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,7 @@
 		1A8B54F9273828B300B6A212 /* SplitBillRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SplitBillRelease.entitlements; sourceTree = "<group>"; };
 		1A9AEF612709A7D300DA0F35 /* CategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		1A9AEF632709A84C00DA0F35 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
+		1AC229A92770F7E100CB550D /* Katuri.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Katuri.otf; sourceTree = "<group>"; };
 		1AE13F1A2744062700633B7C /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
 		1AE151B34E118CFE05FEA0B4 /* Pods-SplitBill.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SplitBill.debug.xcconfig"; path = "Target Support Files/Pods-SplitBill/Pods-SplitBill.debug.xcconfig"; sourceTree = "<group>"; };
 		1AE8211D26F9DD4B0053A3C2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				1A83E9A026F73FD9006F2C4E /* Controllers */,
 				1A83E99426F73E61006F2C4E /* Assets.xcassets */,
 				1A83E99626F73E61006F2C4E /* LaunchScreen.storyboard */,
+				1AC229A22770F39D00CB550D /* Fonts */,
 				1A83E99926F73E61006F2C4E /* Info.plist */,
 				1AE8211D26F9DD4B0053A3C2 /* GoogleService-Info.plist */,
 			);
@@ -124,6 +127,14 @@
 				1AE13F1A2744062700633B7C /* LocalNotificationManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		1AC229A22770F39D00CB550D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				1AC229A92770F7E100CB550D /* Katuri.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		3C0933B04D5DDB4CE8285E52 /* Pods */ = {
@@ -205,6 +216,7 @@
 			files = (
 				1A83E99826F73E61006F2C4E /* LaunchScreen.storyboard in Resources */,
 				1A83E99526F73E61006F2C4E /* Assets.xcassets in Resources */,
+				1AC229AA2770F7E100CB550D /* Katuri.otf in Resources */,
 				1A83E99326F73E5E006F2C4E /* Main.storyboard in Resources */,
 				1AE8211E26F9DD4B0053A3C2 /* GoogleService-Info.plist in Resources */,
 			);
