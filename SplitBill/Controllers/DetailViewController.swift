@@ -655,7 +655,7 @@ class DetailViewController: UIViewController
         shareLink.socialMetaTagParameters = DynamicLinkSocialMetaTagParameters()
         shareLink.socialMetaTagParameters?.title = "\(event!.eventName) from DP"
         shareLink.socialMetaTagParameters?.descriptionText = "Manage your subscriptions with DP!"
-        shareLink.socialMetaTagParameters?.imageURL = URL(string: "https://www.streamscheme.com/wp-content/uploads/2020/04/pepega.png")
+        shareLink.socialMetaTagParameters?.imageURL = URL(string: "https://www.louisianafcu.org/hs-fs/hubfs/Blog_The%20polite%20persons%20guide%20to%20splitting%20the%20bill%20(2).png?width=640&name=Blog_The%20polite%20persons%20guide%20to%20splitting%20the%20bill%20(2).png")
         
         guard let longURL = shareLink.url else { return }
         
