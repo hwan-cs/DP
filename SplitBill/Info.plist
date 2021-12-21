@@ -4,15 +4,6 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Hahmlet-Black.otf</string>
-		<string>Hahmlet-Bold.otf</string>
-		<string>Hahmlet-ExtraBold.otf</string>
-		<string>Hahmlet-ExtraLight.otf</string>
-		<string>Hahmlet-Light.otf</string>
-		<string>Hahmlet-Medium.otf</string>
-		<string>Hahmlet-Regular.otf</string>
-		<string>Hahmlet-SemiBold.otf</string>
-		<string>Hahmlet-Thin.otf</string>
 		<string>Katuri.otf</string>
 		<string>KOTRA HOPE_OTF.otf</string>
 	</array>

@@ -121,6 +121,7 @@ class SettingsViewController: UIViewController
         if sender.isOn == false
         {
             Notification.pushNotificationOn = false
+            UNUserNotificationCenter.current().removeAllDeliveredNotifications()
         }
         else
         {
@@ -132,7 +133,6 @@ class SettingsViewController: UIViewController
             let home = tabbarC.tabBar.selectedItem
             self.tabBarController?.tabBar(tabbarC.tabBar, didSelect: home!)
         }
-        
     }
     @IBAction func darkModeSwitchDidChange(_ sender: UISwitch)
     {

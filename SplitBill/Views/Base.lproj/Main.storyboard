@@ -77,14 +77,14 @@
                         <color key="sectionIndexBackgroundColor" red="0.17479766460000001" green="0.65953231459999995" blue="0.30471401720000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="Nt2-Lm-f9z" customClass="MySwipeCell" customModule="SplitBill">
-                                <rect key="frame" x="0.0" y="31.666666030883789" width="414" height="59"/>
+                                <rect key="frame" x="0.0" y="31.666666030883789" width="414" height="59.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Nt2-Lm-f9z" id="eKR-Tp-UxA">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="59"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="59.666667938232422"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U88-Qx-cHZ">
-                                            <rect key="frame" x="28" y="19" width="42" height="21"/>
+                                            <rect key="frame" x="28" y="19" width="42" height="21.666666666666671"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="42" id="R2X-5E-nUp"/>
                                             </constraints>
@@ -93,7 +93,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zVW-AB-0E7">
-                                            <rect key="frame" x="352" y="19" width="42" height="21"/>
+                                            <rect key="frame" x="352" y="19" width="42" height="21.666666666666671"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" priority="999" constant="42" id="b1L-jf-eFc"/>
                                             </constraints>
@@ -424,9 +424,11 @@
                         <outlet property="selectDateDropDownView" destination="HgJ-sg-d6u" id="u6a-hi-pIH"/>
                         <outlet property="separatorLine_1" destination="sHt-Lh-fMb" id="OFH-cY-DSS"/>
                         <outlet property="textField" destination="UAB-wn-iQi" id="TFs-Wt-8Hb"/>
+                        <segue destination="jzH-GE-yHS" kind="unwind" identifier="unwindToTableView" unwindAction="unwindToTableViewWithSegue:" id="dDn-vU-xgn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iNf-1E-njy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="jzH-GE-yHS" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3966.666666666667" y="-17.410714285714285"/>
         </scene>

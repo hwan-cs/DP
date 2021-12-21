@@ -63,6 +63,7 @@ class DetailViewController: UIViewController
       return controller
     }()
     
+    var invalidInvitation = false
     let KaturiMedium:UIFont = UIFont(name: "KaturiOTF", size: 20)!
     let KaturiLarge: UIFont = UIFont(name: "KaturiOTF", size: 24)!
     
@@ -133,6 +134,7 @@ class DetailViewController: UIViewController
             dateTextField.placeholder = item
         }
     }
+
     func getCurrentUser(completion: @escaping (_ result: String) -> Void)
     {
         currentUser = Auth.auth().currentUser?.email as! String
@@ -163,6 +165,7 @@ class DetailViewController: UIViewController
     func loadFromInvitation(completion: @escaping (_ success: Bool) -> Void)
     {
         print("loadfrominvitation")
+        var found = false
         db.collection("events").whereField("eventName", isNotEqualTo: false).getDocuments { querySnapshot, err in
             if let err = err
             {
@@ -175,6 +178,7 @@ class DetailViewController: UIViewController
                     let data = doc.data()
                     if doc.documentID == self.event?.FIRDocID
                     {
+                        found = true
                         if let eventName = data["eventName"] as? String, let price = data["price"] as? Double, var participants = data["participants"] as? [String]
                             , let owner = data["owner"] as? String, let eventDate = data["eventDate"] as? String, let dateCreated = data["dateCreated"] as? Double
                             , let FIRDocID = self.event?.FIRDocID as? String
@@ -192,7 +196,27 @@ class DetailViewController: UIViewController
                     }
                 }
             }
+            if found == false
+            {
+                completion(false)
+            }
         }
+    }
+    
+    func showAlert(completion: @escaping (_ success: Bool) -> Void)
+    {
+        let alert = UIAlertController(title: "더이상 존재하지 않는 이벤트 입니다!", message: "", preferredStyle: .alert)
+        let imageView = UIImageView(frame: CGRect(x: 65, y: 70, width: 75, height: 70))
+        imageView.image = UIImage(systemName: "xmark.octagon.fill")
+        alert.view.addSubview(imageView)
+        let height = NSLayoutConstraint(item: alert.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 150)
+        let width = NSLayoutConstraint(item: alert.view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 200)
+        alert.view.addConstraint(height)
+        alert.view.addConstraint(width)
+        self.present(alert, animated: true, completion: nil)
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in alert.dismiss(animated: true) {
+            completion(true)
+        }} )
     }
     
     @objc func saveButtonPressed(_ sender: UIButton)
@@ -311,6 +335,19 @@ class DetailViewController: UIViewController
                         self.didChange = self.event
                         self.initView(self.event!.isOwner)
                     }
+                    else
+                    {
+                        var background = UIView(frame: UIScreen.main.bounds)
+                        background.backgroundColor = .black
+                        background.alpha = 0.66
+                        self.view.addSubview(background)
+                        self.view.isUserInteractionEnabled = false
+                        self.showAlert
+                        { success in
+                            self.invalidInvitation = true
+                            self.performSegue(withIdentifier: "unwindToTableView", sender: self)
+                        }
+                    }
                 }
             }
         }
@@ -347,11 +384,16 @@ class DetailViewController: UIViewController
     }
     override func viewWillDisappear(_ animated: Bool)
     {
+        if invalidInvitation == true
+        {
+            return
+        }
         var price = self.event!.price
         if self.priceTextField.text!.isDouble == true
         {
             price = Double(self.priceTextField.text!)!
         }
+
         if self.textField.placeholder! == "월초"
         {
             self.didChange = PaymentEvent(FIRDocID: self.event!.FIRDocID, eventName: self.event!.eventName, dateCreated: self.event!.dateCreated, participants: self.event!.participants, price: price, eventDate: "SOM", isOwner: self.event!.isOwner)

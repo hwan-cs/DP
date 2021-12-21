@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else { return }
-
+        
         if components.path == "/events"
         {
             if let eventFIRDocIDQueryItem = queryItems.first(where: { $0.name == "FIRDocID" })
