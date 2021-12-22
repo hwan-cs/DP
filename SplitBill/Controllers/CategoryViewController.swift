@@ -604,6 +604,7 @@ class CategoryViewController: SwipeTableViewController
             }
             else
             {
+                //?
                 print("Document successfully removed!")
                 completion(true)
             }
