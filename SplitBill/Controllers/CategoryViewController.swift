@@ -17,7 +17,8 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete")
+        { action, indexPath in
 //            // handle action by updating model with deletion
             self.updateModel(at: indexPath)
         }
@@ -29,7 +30,6 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
     func updateModel(at indexPath: IndexPath)
     {
         //update our data model
-        
     }
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
         var options = SwipeOptions()
@@ -108,7 +108,7 @@ class CategoryViewController: SwipeTableViewController
                         self.view.isUserInteractionEnabled = true
                         if self.didInit == true && flag == true
                         {
-                            self.showAlert()
+                            self.showAlert("저장 완료!")
                         }
                         self.didInit = true
                     }
@@ -122,9 +122,9 @@ class CategoryViewController: SwipeTableViewController
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
     }
-    func showAlert()
+    func showAlert(_ message:String)
     {
-        let alert = UIAlertController(title: "저장 완료!", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: message, message: "", preferredStyle: .alert)
         let imageView = UIImageView(frame: CGRect(x: 35, y: 50, width: 50, height: 50))
         imageView.image = UIImage(systemName: "checkmark.circle.fill")
         alert.view.addSubview(imageView)
@@ -578,52 +578,72 @@ class CategoryViewController: SwipeTableViewController
     {
         if indexPath.section == 0
         {
-            db.collection("events").document(paymentArray[indexPath.row].FIRDocID).delete()
-            {   err in
-                if let err = err
-                {
-                    print("Error removing document as owner: \(err)")
-                }
-                else
-                {
-                    print("Document successfully removed!")
-                }
+            deleteOwnerEvent(indexPath.row)
+            { success in
+                self.tableView.reloadData()
+                self.showAlert("삭제 완료!")
             }
-            for (index, element) in self.manager.notifications.enumerated()
-            {
-                if self.manager.notifications[index].id == paymentArray[indexPath.row].FIRDocID
-                {
-                    self.manager.notifications.remove(at: index)
-                    self.manager.schedule()
-                    break
-                }
-            }
-            paymentArray.remove(at: indexPath.row)
         }
         else if indexPath.section == 1
         {
-            db.collection("events").document(participantEventArray[indexPath.row].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser!.email!])])
-            { err in
-                if let err = err
-                {
-                    print("Error removing document as participant: \(err)")
-                }
-                else
-                {
-                    print("Document successfully removed!")
-                }
+            deleteParticipantEvent(indexPath.row)
+            { success in
+                self.tableView.reloadData()
+                self.showAlert("삭제 완료!")
             }
-            for (index, element) in self.manager.notifications.enumerated()
-            {
-                if self.manager.notifications[index].id == participantEventArray[indexPath.row].FIRDocID
-                {
-                    self.manager.notifications.remove(at: index)
-                    self.manager.schedule()
-                    break
-                }
-            }
-            participantEventArray.remove(at: indexPath.row)
         }
+    }
+    //when user deletes event where the user is the owner
+    func deleteOwnerEvent(_ index: Int, completion: @escaping(_ success:Bool)->Void)
+    {
+        db.collection("events").document(paymentArray[index].FIRDocID).delete()
+        {   err in
+            if let err = err
+            {
+                print("Error removing document as owner: \(err)")
+            }
+            else
+            {
+                print("Document successfully removed!")
+                completion(true)
+            }
+        }
+        for (idx, element) in self.manager.notifications.enumerated()
+        {
+            if self.manager.notifications[idx].id == paymentArray[index].FIRDocID
+            {
+                self.manager.notifications.remove(at: idx)
+                self.manager.schedule()
+                break
+            }
+        }
+        paymentArray.remove(at: index)
+    }
+    //when user deletes event where the user is the participant
+    func deleteParticipantEvent(_ index: Int, completion: @escaping(_ success:Bool)->Void)
+    {
+        db.collection("events").document(participantEventArray[index].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser!.email!])])
+        { err in
+            if let err = err
+            {
+                print("Error removing document as participant: \(err)")
+            }
+            else
+            {
+                print("Document successfully removed!")
+                completion(true)
+            }
+        }
+        for (idx, element) in self.manager.notifications.enumerated()
+        {
+            if self.manager.notifications[idx].id == participantEventArray[index].FIRDocID
+            {
+                self.manager.notifications.remove(at: idx)
+                self.manager.schedule()
+                break
+            }
+        }
+        participantEventArray.remove(at: index)
     }
 }
 extension Int
