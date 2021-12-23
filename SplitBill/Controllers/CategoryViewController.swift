@@ -178,7 +178,10 @@ class CategoryViewController: SwipeTableViewController
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
         PaymentEvent.didChange = true
-        KeychainItem.deleteUserIdentifierFromKeychain()
+        KeychainItem.currentUserIdentifier = nil
+        KeychainItem.currentUserFirstName = nil
+        KeychainItem.currentUserLastName = nil
+        KeychainItem.currentUserEmail = nil
         // Display the login controller again.
         DispatchQueue.main.async
         {

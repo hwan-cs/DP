@@ -26,41 +26,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     /// - Tag: did_finish_launching
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
     {
+        checkGoogleCredential
+        { success in
+            self.checkAppleCredential
+            { success in
+                if self.googleSignIn == false && self.appleSignIn == false
+                {
+                    DispatchQueue.main.async
+                    {
+                        self.window?.rootViewController?.showLoginViewController()
+                    }
+                }
+            }
+        }
+        return true
+    }
+    func checkAppleCredential(completion: @escaping (_ success:Bool)->Void)
+    {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier ?? "")
+        { (credentialState, error) in
+            switch credentialState
+            {
+                case .authorized:
+                    completion(true)
+                    break // The Apple ID credential is valid.
+                case .revoked, .notFound:
+                    // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
+                    self.appleSignIn = false
+                    completion(true)
+                default:
+                    break
+            }
+        }
+    }
+    func checkGoogleCredential(completion: @escaping (_ success:Bool)->Void)
+    {
         GIDSignIn.sharedInstance.restorePreviousSignIn
         { user, error in
             if error != nil || user == nil
             {
                 self.googleSignIn = false
+                completion(true)
               // Show the app's signed-out state.
             }
         }
-        
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier)
-        { (credentialState, error) in
-            print(KeychainItem.currentUserIdentifier)
-            switch credentialState
-            {
-                case .authorized:
-                    break // The Apple ID credential is valid.
-                case .revoked, .notFound:
-                    // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
-                    DispatchQueue.main.async
-                    {
-                        self.appleSignIn = false
-                    }
-                default:
-                    break
-            }
-        }
-        if googleSignIn == false || appleSignIn == false
-        {
-            self.window?.rootViewController?.showLoginViewController()
-            return true
-        }
-        return true
     }
-
+    
     func handleIncomingDynamicLink(_ dynamiclink: DynamicLink)
     {
         guard let url = dynamiclink.url else

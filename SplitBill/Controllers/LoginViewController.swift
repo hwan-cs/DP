@@ -95,6 +95,10 @@ extension LoginViewController: ASAuthorizationControllerPresentationContextProvi
     {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
         {
+            KeychainItem.currentUserIdentifier = appleIDCredential.user
+              KeychainItem.currentUserFirstName = appleIDCredential.fullName?.givenName
+              KeychainItem.currentUserLastName = appleIDCredential.fullName?.familyName
+              KeychainItem.currentUserEmail = appleIDCredential.email
               guard let nonce = currentNonce else
               {
                   fatalError("Invalid state: A login callback was received, but no login request was sent.")

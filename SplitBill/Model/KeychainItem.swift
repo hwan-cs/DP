@@ -9,8 +9,8 @@ import Foundation
 
 struct KeychainItem
 {
-    // MARK: Types
     
+    // MARK: Types
     enum KeychainError: Error
     {
         case noPassword
@@ -20,15 +20,11 @@ struct KeychainItem
     }
     
     // MARK: Properties
-    
     let service: String
-    
+    let accessGroup: String?
     private(set) var account: String
     
-    let accessGroup: String?
-    
     // MARK: Intialization
-    
     init(service: String, account: String, accessGroup: String? = nil) {
         self.service = service
         self.account = account
@@ -36,13 +32,8 @@ struct KeychainItem
     }
     
     // MARK: Keychain access
-    
-    func readItem() throws -> String
-    {
-        /*
-         Build a query to find the item that matches the service, account and
-         access group.
-         */
+    func readItem() throws -> String {
+        // Build a query to find the item that matches the service, account and access group.
         var query = KeychainItem.keychainQuery(withService: service, account: account, accessGroup: accessGroup)
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         query[kSecReturnAttributes as String] = kCFBooleanTrue
@@ -65,11 +56,11 @@ struct KeychainItem
             else {
                 throw KeychainError.unexpectedPasswordData
         }
+        
         return password
     }
     
-    func saveItem(_ password: String) throws
-    {
+    func saveItem(_ password: String) throws {
         // Encode the password into an Data object.
         let encodedPassword = password.data(using: String.Encoding.utf8)!
         
@@ -87,10 +78,7 @@ struct KeychainItem
             // Throw an error if an unexpected status was returned.
             guard status == noErr else { throw KeychainError.unhandledError }
         } catch KeychainError.noPassword {
-            /*
-             No password was found in the keychain. Create a dictionary to save
-             as a new keychain item.
-             */
+            //No password was found in the keychain. Create a dictionary to save as a new keychain item.
             var newItem = KeychainItem.keychainQuery(withService: service, account: account, accessGroup: accessGroup)
             newItem[kSecValueData as String] = encodedPassword as AnyObject?
             
@@ -112,7 +100,6 @@ struct KeychainItem
     }
     
     // MARK: Convenience
-    
     private static func keychainQuery(withService service: String, account: String? = nil, accessGroup: String? = nil) -> [String: AnyObject] {
         var query = [String: AnyObject]()
         query[kSecClass as String] = kSecClassGenericPassword
@@ -128,22 +115,84 @@ struct KeychainItem
         
         return query
     }
+}
+
+//Mark - Demo App Helper
+extension KeychainItem {
+    static var bundleIdentifier: String {
+        return Bundle.main.bundleIdentifier ?? "com.developerinsider.SignInWithAppleDemo"
+    }
     
-    static var currentUserIdentifier: String
-    {
-        do {
-            let storedIdentifier = try KeychainItem(service: "konkuk.jhpark.SplitBill", account: "userIdentifier").readItem()
-            return storedIdentifier
-        } catch {
-            return ""
+    //Get and Set Current User Identifier. Set nil to delete.
+    static var currentUserIdentifier: String? {
+        get {
+            return try? KeychainItem(service: bundleIdentifier, account: "userIdentifier").readItem()
+        }
+        set {
+            guard let value = newValue else {
+                try? KeychainItem(service: bundleIdentifier, account: "userIdentifier").deleteItem()
+                return
+            }
+            do {
+                try KeychainItem(service: bundleIdentifier, account: "userIdentifier").saveItem(value)
+            } catch {
+                print("Unable to save userIdentifier to keychain.")
+            }
         }
     }
     
-    static func deleteUserIdentifierFromKeychain() {
-        do {
-            try KeychainItem(service: "konkuk.jhpark.SplitBill", account: "userIdentifier").deleteItem()
-        } catch {
-            print("Unable to delete userIdentifier from keychain")
+    //Get and Set Current User First Name. Set nil to delete.
+    static var currentUserFirstName: String? {
+        get {
+            return try? KeychainItem(service: bundleIdentifier, account: "userFirstName").readItem()
+        }
+        set {
+            guard let value = newValue else {
+                try? KeychainItem(service: bundleIdentifier, account: "userFirstName").deleteItem()
+                return
+            }
+            do {
+                try KeychainItem(service: bundleIdentifier, account: "userFirstName").saveItem(value)
+            } catch {
+                print("Unable to save userFirstName to keychain.")
+            }
+        }
+    }
+    
+    //Get and Set Current User Last Name. Set nil to delete.
+    static var currentUserLastName: String? {
+        get {
+            return try? KeychainItem(service: bundleIdentifier, account: "userLastName").readItem()
+        }
+        set {
+            guard let value = newValue else {
+                try? KeychainItem(service: bundleIdentifier, account: "userLastName").deleteItem()
+                return
+            }
+            do {
+                try KeychainItem(service: bundleIdentifier, account: "userLastName").saveItem(value)
+            } catch {
+                print("Unable to save userLastName to keychain.")
+            }
+        }
+    }
+    
+    
+    //Get and Set Current User Email. Set nil to delete.
+    static var currentUserEmail: String? {
+        get {
+            return try? KeychainItem(service: bundleIdentifier, account: "userEmail").readItem()
+        }
+        set {
+            guard let value = newValue else {
+                try? KeychainItem(service: bundleIdentifier, account: "userEmail").deleteItem()
+                return
+            }
+            do {
+                try KeychainItem(service: bundleIdentifier, account: "userEmail").saveItem(value)
+            } catch {
+                print("Unable to save userEmail to keychain.")
+            }
         }
     }
 }
