@@ -38,7 +38,8 @@ class LoginViewController: UIViewController
             guard
               let authentication = user?.authentication,
               let idToken = authentication.idToken
-            else {
+            else
+            {
               return
             }
             let credential = GoogleAuthProvider.credential(withIDToken: idToken,
@@ -46,21 +47,21 @@ class LoginViewController: UIViewController
 
             Auth.auth().signIn(with: credential)
             { (authResult, error) in
-            if let error = error
-            {
-                print("Error occured during google login")
-                print(error.localizedDescription)
-            }
-            else
-            {
-                print("Login Successful")
-                DispatchQueue.main.async
+                if let error = error
                 {
-                    self.dismiss(animated: true, completion: nil)
+                    print("Error occured during google login")
+                    print(error.localizedDescription)
+                }
+                else
+                {
+                    print("Login Successful")
+                    DispatchQueue.main.async
+                    {
+                        self.dismiss(animated: true, completion: nil)
+                    }
                 }
             }
         }
-    }
     }
     override func viewDidAppear(_ animated: Bool)
     {

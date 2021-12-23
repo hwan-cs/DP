@@ -16,32 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8WN-bc-s5w">
-                                <rect key="frame" x="97" y="416" width="220" height="65"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenImg" translatesAutoresizingMaskIntoConstraints="NO" id="l7Z-Pv-7fQ">
+                                <rect key="frame" x="143" y="384" width="128" height="128"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="65" id="zkS-Bn-8cC"/>
+                                    <constraint firstAttribute="height" constant="128" id="AGJ-de-rqv"/>
+                                    <constraint firstAttribute="width" constant="128" id="Ran-eS-DVh"/>
                                 </constraints>
-                                <attributedString key="attributedText">
-                                    <fragment content="ㄷㅍ">
-                                        <attributes>
-                                            <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <font key="NSFont" size="50" name="KaturiOTF"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="0.30588235294117649" green="0.62352941176470589" blue="0.23921568627450979" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8WN-bc-s5w" secondAttribute="bottom" constant="381" id="JF5-TS-pMh"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="8WN-bc-s5w" secondAttribute="bottom" constant="381" id="ML8-dU-hmO"/>
-                            <constraint firstItem="8WN-bc-s5w" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="372" id="i2K-OZ-pti"/>
-                            <constraint firstItem="8WN-bc-s5w" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="372" id="o2N-tr-Omj"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8WN-bc-s5w" secondAttribute="trailing" constant="97" id="uLq-wc-FN3"/>
-                            <constraint firstItem="8WN-bc-s5w" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="97" id="xOE-6Q-5nB"/>
+                            <constraint firstItem="l7Z-Pv-7fQ" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="03w-UA-Vgp"/>
+                            <constraint firstItem="l7Z-Pv-7fQ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ZRr-IG-7pi"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -50,4 +37,7 @@
             <point key="canvasLocation" x="52.173913043478265" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="LaunchScreenImg" width="128" height="128"/>
+    </resources>
 </document>

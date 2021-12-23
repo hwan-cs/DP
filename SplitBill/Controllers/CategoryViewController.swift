@@ -86,7 +86,6 @@ class CategoryViewController: SwipeTableViewController
            navigationController?.navigationBar.barTintColor = .systemGreen
         }
     }
-
     override func viewDidAppear(_ animated: Bool)
     {
         print("viewDidAppear")
