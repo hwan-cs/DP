@@ -177,6 +177,7 @@ class CategoryViewController: SwipeTableViewController
     
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
+        self.didInit = false
         PaymentEvent.didChange = true
         KeychainItem.currentUserIdentifier = nil
         KeychainItem.currentUserFirstName = nil
