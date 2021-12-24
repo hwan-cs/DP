@@ -31,7 +31,7 @@ DP는 아래의 오픈소스 라이브러리(CocoaPod)들을 사용합니다:
 
 | 이벤트 선택 화면 (소유자)  | 이벤트 선택 화면 (참가자) | 초대하기 클릭 |
 | ------------- | ------------- | ------------- |
-| ![alt text](https://user-images.githubusercontent.com/68496759/147366938-55e4e2c7-2ea6-4539-b1f9-154b6031e4d3.png)  | ![alt text](https://user-images.githubusercontent.com/68496759/147366981-a7a22acd-a1cc-4ded-bc24-2e18bf0d1c1b.png)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367730-0c169fff-7dc4-4df9-af9c-525defdcf679.jpg) |
+| ![alt text](https://user-images.githubusercontent.com/68496759/147366938-55e4e2c7-2ea6-4539-b1f9-154b6031e4d3.png)  | ![alt text](https://user-images.githubusercontent.com/68496759/147366981-a7a22acd-a1cc-4ded-bc24-2e18bf0d1c1b.png)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367832-4aa59788-d816-4532-824b-e9c21b3aa60d.png) |
 
 | 이벤트 추가  | 새로운 이벤트 저장 |  이벤트 삭제 |
 | ------------- | ------------- | ------------- |
@@ -40,3 +40,6 @@ DP는 아래의 오픈소스 라이브러리(CocoaPod)들을 사용합니다:
 | 소유자 알림  | 참가자 알림 |  초대 링크 |
 | ------------- | ------------- | ------------- |
 | ![alt text](https://user-images.githubusercontent.com/68496759/147367671-06ce791f-d34f-4729-852f-1264bcfbf3c7.jpg)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367676-fe59942f-daa6-4a0c-8cd2-d02d9115728e.jpg)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367679-b5619631-bea1-427f-b037-be79df203b76.jpg)  |
+
+
+Skills Used: MVC, Firebase, LocalNotification, UserDefaults, CocoaPods, Keychain
