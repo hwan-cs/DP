@@ -17,7 +17,7 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete")
+        let deleteAction = SwipeAction(style: .destructive, title: "삭제")
         { action, indexPath in
 //            // handle action by updating model with deletion
             self.updateModel(at: indexPath)
@@ -493,7 +493,7 @@ class CategoryViewController: SwipeTableViewController
     
     override func numberOfSections(in tableView: UITableView) -> Int
     {
-        return 3
+        return 4
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
@@ -525,6 +525,11 @@ class CategoryViewController: SwipeTableViewController
         {
             label.attributedText = NSAttributedString(string: "구독권 지출 금액: \(Int(total).withCommas())원", attributes: [ .font: KaturiLarge, .foregroundColor: UIColor.black ])
         }
+        else if section == 3
+        {
+            label.attributedText = NSAttributedString(string: "로그인 계정: \(self.currentUser)", attributes: [ .font: UIFont(name: "KaturiOTF", size: 20)!, .foregroundColor: UIColor.black ])
+        }
+        label.adjustsFontSizeToFitWidth = true
         if isDarkOn == true
         {
             label.textColor = .white
@@ -545,7 +550,7 @@ class CategoryViewController: SwipeTableViewController
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?
     {
-        if indexPath.section == 2
+        if indexPath.section == 2 || indexPath.section == 3
         {
             return nil
         }
