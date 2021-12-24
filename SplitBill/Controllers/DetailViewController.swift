@@ -677,7 +677,7 @@ class DetailViewController: UIViewController
             guard let url = url else { return }
             print("I have a short url to share! \(url.absoluteString)")
             
-            let promoText = "Join me in my DP event, \(self.event!.eventName)"
+            let promoText = "같이 \(self.event!.eventName) 더치페이 해요!"
             let controller = UIActivityViewController(activityItems: [promoText, url],
                                                       applicationActivities: nil)
             if let popoverController = controller.popoverPresentationController {
