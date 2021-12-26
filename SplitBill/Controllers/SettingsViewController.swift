@@ -114,6 +114,7 @@ class SettingsViewController: UIViewController
         darkModeView.addSubview(DMshadowView)
         darkModeView.sendSubviewToBack(DMshadowView)
     }
+    //MARK: - Push Notification switch IBAction
     @IBAction func pushNotificationSwitchDidChange(_ sender: UISwitch)
     {
         PaymentEvent.didChange = true
@@ -134,6 +135,8 @@ class SettingsViewController: UIViewController
             self.tabBarController?.tabBar(tabbarC.tabBar, didSelect: home!)
         }
     }
+    
+    //MARK: - Dark Mode switch IBAction
     @IBAction func darkModeSwitchDidChange(_ sender: UISwitch)
     {
         UserDefaults.standard.set(darkModeSwitch.isOn, forKey: "prefs_is_dark_mode_on")

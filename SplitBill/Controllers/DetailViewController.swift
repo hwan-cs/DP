@@ -52,6 +52,7 @@ class DetailViewController: UIViewController
     
     var currentUser = ""
     
+    //MARK: - Share ViewController
     lazy private var shareController: UIActivityViewController =
     {
       let activities: [Any] = [
@@ -135,6 +136,7 @@ class DetailViewController: UIViewController
         }
     }
 
+    //MARK: - Get current user depending on appleid or googleid
     func getCurrentUser(completion: @escaping (_ result: String) -> Void)
     {
         currentUser = Auth.auth().currentUser?.email as! String
@@ -162,6 +164,7 @@ class DetailViewController: UIViewController
         }
     }
     
+    //MARK: - Load from invitation, check if invitation is valid or not
     func loadFromInvitation(completion: @escaping (_ success: Bool) -> Void)
     {
         print("loadfrominvitation")
@@ -203,6 +206,7 @@ class DetailViewController: UIViewController
         }
     }
     
+    //MARK: - Alert for if the invitation event no longer exists
     func showAlert(completion: @escaping (_ success: Bool) -> Void)
     {
         let alert = UIAlertController(title: "더이상 존재하지 않는 이벤트 입니다!", message: "", preferredStyle: .alert)
@@ -219,6 +223,7 @@ class DetailViewController: UIViewController
         }} )
     }
     
+    //MARK: - Save button IBAction
     @objc func saveButtonPressed(_ sender: UIButton)
     {
         let alert = UIAlertController(title: "저장하시겠습니까?", message: "한번 저장하면 다시 날짜를 바꿀 수 없습니다.", preferredStyle: .alert)
@@ -294,6 +299,7 @@ class DetailViewController: UIViewController
         present(alert, animated: true, completion: nil)
     }
     
+    //MARK: - viewWillAppear
     override func viewWillAppear(_ animated: Bool)
     {
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
@@ -382,6 +388,8 @@ class DetailViewController: UIViewController
             self.initView(self.event!.isOwner)
         }
     }
+    
+    //MARK: - viewWillDisappear, save changes to event if change has been made
     override func viewWillDisappear(_ animated: Bool)
     {
         if invalidInvitation == true
@@ -441,6 +449,8 @@ class DetailViewController: UIViewController
         self.saveButtonView.removeFromSuperview()
         self.saveButton.removeFromSuperview()
     }
+    
+    //MARK: - Initialize view
     func initView(_ isOwner: Bool)
     {
         if event?.eventName != "" && event?.eventDate == "" && event?.isOwner == true
@@ -624,6 +634,8 @@ class DetailViewController: UIViewController
             selectDateDropDown.show()
         }
     }
+    
+    //MARK: - Invite button IBAction
     @IBAction func sendInvitation(_ sender: UIButton)
     {
         var components = URLComponents()
