@@ -12,6 +12,7 @@ import SwiftUI
 import FirebaseFirestore
 import SwipeCellKit
 
+//MARK: - Custom SwipeTableViewCell
 class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
 {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
@@ -19,11 +20,8 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
         
         let deleteAction = SwipeAction(style: .destructive, title: "삭제")
         { action, indexPath in
-//            // handle action by updating model with deletion
             self.updateModel(at: indexPath)
         }
-
-        // customize the action appearance
         deleteAction.image = UIImage(named: "delete")
         return [deleteAction]
     }
@@ -44,10 +42,10 @@ class MySwipeCell:SwipeTableViewCell, SwipeTableViewCellDelegate
 
 class CategoryViewController: SwipeTableViewController
 {
-//    let realm = try! Realm()
+    //Data for TableVC
     var paymentArray: [PaymentEvent] = []
     var participantEventArray: [PaymentEvent] = []
-//    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     let db = Firestore.firestore()
     var manager = LocalNotificationManager()
     var currentUser = ""
@@ -86,9 +84,9 @@ class CategoryViewController: SwipeTableViewController
            navigationController?.navigationBar.barTintColor = .systemGreen
         }
     }
+    //MARK: - Upon viewDidAppear, get current user, load events, and show alert if change has been made
     override func viewDidAppear(_ animated: Bool)
     {
-        print("viewDidAppear")
         let selectedRow: IndexPath? = tableView.indexPathForSelectedRow
         if let selectedRowNotNill = selectedRow
         {
@@ -96,8 +94,8 @@ class CategoryViewController: SwipeTableViewController
         }
         if Auth.auth().currentUser?.email != nil
         {
-            getCurrentUser { result in
-                print("got back \(self.currentUser)")
+            getCurrentUser
+            { result in
                 self.view.isUserInteractionEnabled = false
                 DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
                 {
@@ -121,6 +119,8 @@ class CategoryViewController: SwipeTableViewController
         let isDarkOn = UserDefaults.standard.bool(forKey: "prefs_is_dark_mode_on")
         view.backgroundColor = isDarkOn ? UIColor.black : UIColor(red: 0.94, green: 0.95, blue: 0.96, alpha: 1.00)
     }
+    
+    //MARK: - Alert that presents when a change has been made
     func showAlert(_ message:String)
     {
         let alert = UIAlertController(title: message, message: "", preferredStyle: .alert)
@@ -134,6 +134,8 @@ class CategoryViewController: SwipeTableViewController
         self.present(alert, animated: true, completion: nil)
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { _ in alert.dismiss(animated: true, completion: nil)} )
     }
+    
+    //MARK: - Add Button IBAction, add data to tableview datasource & firebase database
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem)
     {
         var textField = UITextField()
@@ -170,11 +172,14 @@ class CategoryViewController: SwipeTableViewController
         }))
         present(alert, animated: true, completion: nil)
     }
+    
+    //MARK: - Dismiss keyboard when tapped outside
     @objc func dismissOnTapOutside()
     {
        self.dismiss(animated: true, completion: nil)
     }
     
+    //MARK: - Signout button IBAction
     @IBAction func signOutButtonPressed(_ sender: UIBarButtonItem)
     {
         self.didInit = false
@@ -199,6 +204,8 @@ class CategoryViewController: SwipeTableViewController
             self.showLoginViewController()
         }
     }
+    
+    //MARK: - Get current user depending on appleid or googleid
     func getCurrentUser(completion: @escaping (_ result: String) -> Void)
     {
         currentUser = Auth.auth().currentUser?.email as! String
@@ -225,6 +232,8 @@ class CategoryViewController: SwipeTableViewController
             completion(self.currentUser)
         }
     }
+    
+    //MARK: - Load events from Firebase, schedule LocalNotifications
     func loadEvents(completion: @escaping (_ success: Bool) -> Void)
     {
         //date formatter
@@ -601,7 +610,8 @@ class CategoryViewController: SwipeTableViewController
             }
         }
     }
-    //when user deletes event where the user is the owner
+    
+    //MARK: - When owner deletes event
     func deleteOwnerEvent(_ index: Int, completion: @escaping(_ success:Bool)->Void)
     {
         db.collection("events").document(paymentArray[index].FIRDocID).delete()
@@ -627,7 +637,8 @@ class CategoryViewController: SwipeTableViewController
         }
         paymentArray.remove(at: index)
     }
-    //when user deletes event where the user is the participant
+    
+    //MARK: - When participant deletes event
     func deleteParticipantEvent(_ index: Int, completion: @escaping(_ success:Bool)->Void)
     {
         db.collection("events").document(participantEventArray[index].FIRDocID).updateData(["participants" : FieldValue.arrayRemove([Auth.auth().currentUser!.email!])])
