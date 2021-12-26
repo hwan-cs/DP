@@ -41,5 +41,6 @@ DP는 아래의 오픈소스 라이브러리(CocoaPod)들을 사용합니다:
 | ------------- | ------------- | ------------- |
 | ![alt text](https://user-images.githubusercontent.com/68496759/147367671-06ce791f-d34f-4729-852f-1264bcfbf3c7.jpg)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367676-fe59942f-daa6-4a0c-8cd2-d02d9115728e.jpg)  | ![alt text](https://user-images.githubusercontent.com/68496759/147367679-b5619631-bea1-427f-b037-be79df203b76.jpg)  |
 
+🙈🙈:https://equinox-antimony-814.notion.site/DP-0a752951d85b4397845c7cde432e2481
 
 Skills Used: UIKit, MVC, Firebase, LocalNotification, UserDefaults, CocoaPods, Keychain
